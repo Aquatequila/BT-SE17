@@ -1,4 +1,4 @@
-﻿using System; 
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,31 +10,31 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace GUI_BT_SE17
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ToolsWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ToolsWindow : Window
     {
-        private ToolsWindow tools = null;
-        public MainWindow()
+        private bool closeable = false;
+        public ToolsWindow()
         {
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
-            tools       = new ToolsWindow();
-            tools.Show();
-            tools.Left -= this.Width / 2 + tools.Width/2;
+        }
+        public void MakeClosable()
+        {
+            closeable = true;
         }
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            tools.MakeClosable();
-            tools.Close();
+            e.Cancel = !closeable;
 
             base.OnClosing(e);
         }
+
     }
 }
