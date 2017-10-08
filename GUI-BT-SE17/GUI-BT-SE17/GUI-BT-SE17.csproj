@@ -58,6 +58,7 @@
     <Compile Include="PropertyWindow.xaml.cs">
       <DependentUpon>PropertyWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ShapeFactory.cs" />
     <Compile Include="ToolsWindow.xaml.cs">
       <DependentUpon>ToolsWindow.xaml</DependentUpon>
     </Compile>

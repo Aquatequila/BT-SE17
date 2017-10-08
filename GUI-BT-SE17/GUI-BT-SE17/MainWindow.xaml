@@ -10,7 +10,8 @@
     <Canvas x:Name="MainCanvas" Background="LightGray"  
             MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown"
             MouseMove="MainCanvas_MouseMove"
-            MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp">
+            MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp"
+            MouseRightButtonUp="MainCanvas_MouseRightButtonUp">
         
     </Canvas>
 </Window>

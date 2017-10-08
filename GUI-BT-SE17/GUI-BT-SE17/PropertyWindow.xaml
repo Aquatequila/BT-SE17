@@ -7,13 +7,26 @@
         mc:Ignorable="d"
         Title="PropertyWindow" Height="300" Width="300">
     <Grid>
-        <Label Content="A" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="20"/>
-        <TextBox x:Name="aBox" HorizontalAlignment="Left" Height="18" Margin="35,14,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
-        <Label Content="R" HorizontalAlignment="Left" Height="30" Margin="64,10,0,0" VerticalAlignment="Top" Width="20"/>
-        <TextBox x:Name="rBox" HorizontalAlignment="Left" Height="18" Margin="89,14,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
-        <Label Content="G" HorizontalAlignment="Left" Height="30" Margin="117,10,0,0" VerticalAlignment="Top" Width="20"/>
-        <TextBox x:Name="gBox" HorizontalAlignment="Left" Height="18" Margin="142,14,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
-        <Label Content="B" HorizontalAlignment="Left" Height="30" Margin="170,10,0,0" VerticalAlignment="Top" Width="20"/>
-        <TextBox x:Name="bBox" HorizontalAlignment="Left" Height="18" Margin="195,14,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Rectangle Fill="DarkSlateGray" HorizontalAlignment="Left" Height="72" Stroke="Black" VerticalAlignment="Top" Width="231"/>
+        <Label Content="A" HorizontalAlignment="Left" Height="30" Margin="6,28,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="aBox" HorizontalAlignment="Left" Height="18" Margin="32,32,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="R" HorizontalAlignment="Left" Height="30" Margin="60,28,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="rBox" HorizontalAlignment="Left" Height="18" Margin="86,32,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="G" HorizontalAlignment="Left" Height="30" Margin="114,28,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="gBox" HorizontalAlignment="Left" Height="18" Margin="138,32,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="B" HorizontalAlignment="Left" Height="30" Margin="166,28,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="bBox" HorizontalAlignment="Left" Height="18" Margin="192,32,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="Fill Color" HorizontalAlignment="Left" Height="27" Margin="71,5,0,0" VerticalAlignment="Top" Width="56" RenderTransformOrigin="0.795,0.444"/>
+        <Rectangle Fill="DarkSlateGray" HorizontalAlignment="Left" Height="72" Stroke="Black" VerticalAlignment="Top" Width="231" Margin="0,78,0,0"/>
+        <Label Content="A" HorizontalAlignment="Left" Height="30" Margin="6,106,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="aBoxStroke" HorizontalAlignment="Left" Height="18" Margin="32,110,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="R" HorizontalAlignment="Left" Height="30" Margin="60,106,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="rBoxStroke" HorizontalAlignment="Left" Height="18" Margin="86,110,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="G" HorizontalAlignment="Left" Height="30" Margin="114,106,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="gBoxStroke" HorizontalAlignment="Left" Height="18" Margin="138,110,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="B" HorizontalAlignment="Left" Height="30" Margin="166,106,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="bBoxStroke" HorizontalAlignment="Left" Height="18" Margin="192,110,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="Stroke Color" HorizontalAlignment="Left" Height="26" Margin="71,84,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.795,0.444"/>
+
     </Grid>
 </Window>

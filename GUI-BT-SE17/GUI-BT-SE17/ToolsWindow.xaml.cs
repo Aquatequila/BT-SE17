@@ -28,9 +28,7 @@ namespace GUI_BT_SE17
 
             shapes.Items.Add("rectangle");
             shapes.Items.Add("path");
-            shapes.Items.Add("circle");
-
-            
+            shapes.Items.Add("ellipse");
 
         }
         public void MakeClosable()
