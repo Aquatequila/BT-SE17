@@ -12,6 +12,6 @@ namespace GUI_BT_SE17
         public static string selectedMenuItem;
         public static Point  clickPosition;
         public static int    clickCounter = 0;
-
+        public static PropertyWindow property;
     }
 }

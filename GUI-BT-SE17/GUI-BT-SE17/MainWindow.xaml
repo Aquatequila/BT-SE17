@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI_BT_SE17"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525"
+        KeyDown="Window_KeyDown">
     <Canvas x:Name="MainCanvas" Background="LightGray"  
             MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown"
             MouseMove="MainCanvas_MouseMove"

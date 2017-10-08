@@ -32,7 +32,9 @@ namespace GUI_BT_SE17
             property = new PropertyWindow();
 
             property.Show();
-            property.Left += this.Width / 2;
+            property.Left += this.Width / 2 + property.Width / 2;
+
+            GUIData.property = property;
 
             tools.Show();
             tools.Left -= this.Width / 2 + tools.Width/2;
@@ -47,10 +49,29 @@ namespace GUI_BT_SE17
 
         private void startRectangle(Point mouseClick)
         {
+            TextBox a = (TextBox) property.FindName("aBox");
+            TextBox r = (TextBox)property.FindName("rBox");
+            TextBox g = (TextBox)property.FindName("gBox");
+            TextBox b = (TextBox)property.FindName("bBox");
+
             GUIData.clickPosition = mouseClick;
             rect = new Rectangle();
+
+            byte aVal;
+            byte.TryParse(a.Text, out aVal);
+
+            byte rVal;
+            byte.TryParse(r.Text, out rVal);
+
+            byte gVal;
+            byte.TryParse(g.Text, out gVal);
+
+            byte bVal;
+            byte.TryParse(b.Text, out bVal);
+
+
             rect.Stroke = new SolidColorBrush(Colors.Black);
-            rect.Fill = new SolidColorBrush(Colors.Red);
+            rect.Fill = new SolidColorBrush(Color.FromArgb(aVal, rVal, gVal, bVal));
             Canvas.SetLeft(rect, GUIData.clickPosition.X);
             Canvas.SetTop(rect, GUIData.clickPosition.Y);
             MainCanvas.Children.Add(rect);
@@ -102,6 +123,23 @@ namespace GUI_BT_SE17
             if (GUIData.selectedMenuItem == "rectangle")
             {
                 stopRectangle();
+            }
+        }
+
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.P: Console.WriteLine(e.Key); break;
+                case Key.C: Console.WriteLine(e.Key); break;
+                case Key.R: Console.WriteLine(e.Key); break;
+                case Key.E: Console.WriteLine(e.Key); break;
+                case Key.L: Console.WriteLine(e.Key); break;
+                case Key.LeftCtrl: Console.WriteLine(e.Key); break;
+                default:
+                    Console.WriteLine("no valid key pressed");
+                    break;
             }
         }
     }
