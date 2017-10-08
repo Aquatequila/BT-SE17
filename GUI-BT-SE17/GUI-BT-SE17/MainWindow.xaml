@@ -6,6 +6,10 @@
         xmlns:local="clr-namespace:GUI_BT_SE17"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-    </Grid>
+    <Canvas x:Name="MainCanvas" Background="LightGray"  
+            MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown"
+            MouseMove="MainCanvas_MouseMove"
+            MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp">
+        
+    </Canvas>
 </Window>

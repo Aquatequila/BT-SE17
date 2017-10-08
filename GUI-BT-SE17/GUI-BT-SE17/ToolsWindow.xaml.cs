@@ -20,10 +20,18 @@ namespace GUI_BT_SE17
     public partial class ToolsWindow : Window
     {
         private bool closeable = false;
+        
         public ToolsWindow()
         {
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
+
+            shapes.Items.Add("rectangle");
+            shapes.Items.Add("path");
+            shapes.Items.Add("circle");
+
+            
+
         }
         public void MakeClosable()
         {
@@ -36,5 +44,11 @@ namespace GUI_BT_SE17
             base.OnClosing(e);
         }
 
+        private void shapes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string selected = (string) e.AddedItems[0];
+            GUIData.selectedMenuItem = selected;
+
+        }
     }
 }

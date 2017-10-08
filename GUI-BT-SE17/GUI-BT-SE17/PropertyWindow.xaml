@@ -1,0 +1,19 @@
+﻿<Window x:Class="GUI_BT_SE17.PropertyWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUI_BT_SE17"
+        mc:Ignorable="d"
+        Title="PropertyWindow" Height="300" Width="300">
+    <Grid>
+        <Label Content="A" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="aBox" HorizontalAlignment="Left" Height="18" Margin="35,14,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="R" HorizontalAlignment="Left" Height="30" Margin="64,10,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="rBox" HorizontalAlignment="Left" Height="18" Margin="89,14,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="G" HorizontalAlignment="Left" Height="30" Margin="117,10,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="gBox" HorizontalAlignment="Left" Height="18" Margin="142,14,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+        <Label Content="B" HorizontalAlignment="Left" Height="30" Margin="170,10,0,0" VerticalAlignment="Top" Width="20"/>
+        <TextBox x:Name="bBox" HorizontalAlignment="Left" Height="18" Margin="195,14,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Width="26"/>
+    </Grid>
+</Window>

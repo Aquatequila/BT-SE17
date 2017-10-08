@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:GUI_BT_SE17"
         mc:Ignorable="d"
         Title="Tools" Height="350" Width="120">
-    <Grid>
+    <ListView x:Name="shapes" SelectionChanged="shapes_SelectionChanged">
         
-    </Grid>
+
+    </ListView>
 </Window>
