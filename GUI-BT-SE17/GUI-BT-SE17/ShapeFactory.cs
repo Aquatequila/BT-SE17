@@ -38,9 +38,16 @@ namespace GUI_BT_SE17
             if (fillSelected)
             {
                 shape.Fill = new SolidColorBrush(fill);
+                // this makes the shape clickable
+                //shape.Fill = new SolidColorBrush(Colors.Transparent);
             }
-            Canvas.SetLeft(shape, position.X);
-            Canvas.SetTop(shape, position.Y);
+
+            if (elem != ForgeShape.Path)
+            {
+                Canvas.SetLeft(shape, position.X);
+                Canvas.SetTop(shape, position.Y);
+            }
+            
 
             shape.MouseDown += MainWindow.shape_MouseLeftButtonDown;
             shape.MouseMove           += MainWindow.shape_MouseMove;

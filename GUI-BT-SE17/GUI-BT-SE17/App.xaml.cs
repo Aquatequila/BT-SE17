@@ -13,5 +13,6 @@ namespace GUI_BT_SE17
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

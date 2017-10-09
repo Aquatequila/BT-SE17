@@ -20,55 +20,42 @@ namespace GUI_BT_SE17
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ToolsWindow tools = null;
-        private PropertyWindow property = null;
-        private Rectangle rect;
-        private Ellipse ellipse;
-        private Path path;
-        private static Shape selectedShape;
-        private static string pathString;
-        private static Key lastKeyPressed;
-        private static Canvas canvas;
 
         public MainWindow()
         {
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
-            tools       = new ToolsWindow();
-            property    = new PropertyWindow();
+            
+            ApplicationData.toolsWindow     = new ToolsWindow();
+            ApplicationData.toolsWindow.Show();
+            ApplicationData.propertyWindow  = new PropertyWindow();
+            ApplicationData.propertyWindow.Show();
 
-            property.Show();
-            property.Left += this.Width / 2 + property.Width / 2;
 
-            canvas = (Canvas) this.FindName("MainCanvas");
+            ApplicationData.propertyWindow.Left += this.Width / 2 + ApplicationData.propertyWindow.Width / 2;
 
-            GUIData.property = property;
+            ApplicationData.canvas = (Canvas)this.FindName("MainCanvas");
 
-            tools.Show();
-            tools.Left -= this.Width / 2 + tools.Width/2;
+            ApplicationData.toolsWindow.Left -= this.Width / 2 + ApplicationData.toolsWindow.Width/2;
         }
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            tools.MakeClosable();
-            tools.Close();
+            ApplicationData.toolsWindow.MakeClosable();
+            ApplicationData.toolsWindow.Close();
 
             base.OnClosing(e);
         }
 
-        internal static void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            selectedShape = null;
-            e.Handled = true;
-        }
+        
 
-        private Color ExtractARGB(string postfix = "")
+        private static Color ExtractARGB(string postfix = "")
         {
             Color color = new Color();
 
-            TextBox a = (TextBox)property.FindName("aBox" + postfix);
-            TextBox r = (TextBox)property.FindName("rBox" + postfix);
-            TextBox g = (TextBox)property.FindName("gBox" + postfix);
-            TextBox b = (TextBox)property.FindName("bBox" + postfix);
+            TextBox a = (TextBox)ApplicationData.propertyWindow.FindName("aBox" + postfix);
+            TextBox r = (TextBox)ApplicationData.propertyWindow.FindName("rBox" + postfix);
+            TextBox g = (TextBox)ApplicationData.propertyWindow.FindName("gBox" + postfix);
+            TextBox b = (TextBox)ApplicationData.propertyWindow.FindName("bBox" + postfix);
 
             byte aVal;
             byte.TryParse(a.Text, out aVal);
@@ -90,177 +77,158 @@ namespace GUI_BT_SE17
             return color;
         }
 
-        private void startEllipse(Point mouseClick)
+        private static bool UnwrapCheckboxCheckedState(bool? state)
         {
-            GUIData.clickPosition = mouseClick;
-
-            CheckBox strokeWidth = (CheckBox)property.FindName("StrokeEnabled");
-            CheckBox fillStyle   = (CheckBox)property.FindName("FillEnabled");
-
-
-            Color fill   = ExtractARGB();
-            Color stroke = ExtractARGB("Stroke");
-
-            ellipse = (Ellipse)ShapeFactory.InitShape(stroke, fill, mouseClick, ForgeShape.Ellipse, true, true);
-
-            MainCanvas.Children.Add(ellipse);
+            switch(state)
+            {
+                case true:  return true;
+                case false: return false;
+                default:    return false;
+            }
         }
 
-        private void startPath(Point mouseClick)
+        private static void StartShape(Point mouseClick, ForgeShape shape)
         {
-            GUIData.clickPosition = mouseClick;
+            ApplicationData.mouseClick      = mouseClick;
+            CheckBox strokeBox              = (CheckBox)ApplicationData.propertyWindow.FindName("StrokeEnabled");
+            CheckBox fillBox                = (CheckBox)ApplicationData.propertyWindow.FindName("FillEnabled");
+            bool strokeEnabled              = UnwrapCheckboxCheckedState(strokeBox.IsChecked);
+            bool fillEnabled                = UnwrapCheckboxCheckedState(fillBox.IsChecked);
 
-            Color fill = ExtractARGB();
-            Color stroke = ExtractARGB("Stroke");
+            Color fill                      = ExtractARGB();
+            Color stroke                    = ExtractARGB("Stroke");
+            ApplicationData.selectedShape   = ShapeFactory.InitShape(stroke, fill, mouseClick, shape, strokeEnabled, fillEnabled);
 
-            path = (Path) ShapeFactory.InitShape(stroke, fill, new Point(0,0), ForgeShape.Path, true, false);
+            ApplicationData.canvas.Children.Add(ApplicationData.selectedShape);
 
-            pathString = String.Format("M{0} {1}", mouseClick.X, mouseClick.Y);
-            path.Data = Geometry.Parse(pathString);
-            
-            MainCanvas.Children.Add(path);
+            if (shape == ForgeShape.Path)
+            {
+                StartPath(mouseClick);
+            }
+        }
+        private static void StartPath(Point mouseClick)
+        {
+            ApplicationData.pathString  = String.Format("M{0} {1}", mouseClick.X, mouseClick.Y);
+            Path path                   = (Path)ApplicationData.selectedShape;
+            path.Data                   = Geometry.Parse(ApplicationData.pathString);
         }
 
-        private void updatePath(Point mouseClick)
+        private static void UpdatePath(Point mouseClick)
         {
-            path.Data = Geometry.Parse(String.Format("{0} L {1} {2}", pathString,
-                mouseClick.X, mouseClick.Y));
+            Path path = (Path)ApplicationData.selectedShape;
+            path.Data = Geometry.Parse(String.Format("{0} L {1} {2}", 
+                ApplicationData.pathString, mouseClick.X, mouseClick.Y));
         }
 
-        private static void setPathPoint(Point mouseClick)
+        private static void SetPathPoint(Point mouseClick)
         {
-            pathString += String.Format(" L {0} {1}", mouseClick.X, mouseClick.Y);
+            ApplicationData.pathString += String.Format(" L {0} {1}", mouseClick.X, mouseClick.Y);
+            Path path = (Path)ApplicationData.selectedShape;
+            path.Data = Geometry.Parse(ApplicationData.pathString);
         }
 
         private void EndPath(bool doClose = false)
         {
             if (doClose)
             {
-                pathString += "Z";
+                ApplicationData.pathString += "Z";
             }
-            path.Data = Geometry.Parse(pathString);
-            path = null;
+            Path path                       = (Path)ApplicationData.selectedShape;
+            path.Data                       = Geometry.Parse(ApplicationData.pathString);
+            ApplicationData.selectedShape   = null;
+            ApplicationData.pathString      = "";
         }
 
-        private void updateEllipse(Point currentMousePosition)
+        private static void UpdateShape(Point currentMousePosition)
         {
-            ellipse.Height = Math.Abs(GUIData.clickPosition.Y - currentMousePosition.Y);
-            ellipse.Width  = Math.Abs(GUIData.clickPosition.X - currentMousePosition.X);
+            Shape shape     = ApplicationData.selectedShape;
+            Point position  = ApplicationData.mouseClick;
 
-            if (GUIData.clickPosition.X > currentMousePosition.X) // width invert
+            shape.Height    = Math.Abs(position.Y - currentMousePosition.Y);
+            shape.Width     = Math.Abs(position.X - currentMousePosition.X);
+
+            if (position.X > currentMousePosition.X) // width invert
             {
-                Canvas.SetLeft(ellipse, GUIData.clickPosition.X - ellipse.Width);
+                Canvas.SetLeft(shape, position.X - shape.Width);
             }
-            if (GUIData.clickPosition.Y > currentMousePosition.Y) // height invert
+            if (position.Y > currentMousePosition.Y) // height invert
             {
-                Canvas.SetTop(ellipse, GUIData.clickPosition.Y - ellipse.Height);
+                Canvas.SetTop(shape, position.Y - shape.Height);
             }
         }
-        private void stopEllipse()
+
+        private static void EndShape()
         {
-            ellipse = null;
+            ApplicationData.selectedShape = null;
         }
 
-        private void startRectangle(Point mouseClick)
+        private void MainCanvas_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            GUIData.clickPosition = mouseClick;
-
-            Color fill = ExtractARGB();
-            Color stroke = ExtractARGB("Stroke");
-
-            rect = (Rectangle) ShapeFactory.InitShape(stroke, fill, mouseClick, ForgeShape.Rectangle, true, true);
-
-            MainCanvas.Children.Add(rect);
-        }
-
-        private void stopRectangle()
-        {
-            rect = null;
-        }
-
-        private void updateRectangle(Point currentMousePosition)
-        {
-            rect.Height = Math.Abs(GUIData.clickPosition.Y - currentMousePosition.Y);
-            rect.Width  = Math.Abs(GUIData.clickPosition.X - currentMousePosition.X);
-
-            if (GUIData.clickPosition.X > currentMousePosition.X) // width invert
-            {
-                Canvas.SetLeft(rect, GUIData.clickPosition.X - rect.Width);
-            }
-            if (GUIData.clickPosition.Y > currentMousePosition.Y) // height invert
-            {
-                Canvas.SetTop(rect, GUIData.clickPosition.Y - rect.Height);
-            }
+            EndPath();
         }
 
         private void MainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (GUIData.selectedMenuItem == "rectangle")
-            {
-                startRectangle(e.GetPosition(this));
-            }
-            else if (GUIData.selectedMenuItem == "ellipse")
-            {
-                startEllipse(e.GetPosition(this));
-            }
-            else if (GUIData.selectedMenuItem == "path")
-            {
-                if (path == null)
-                {
-                    startPath(e.GetPosition(this));
-                }
-                else
-                {
-                    setPathPoint(e.GetPosition(this));
-                }
-                
-            }
+            Point position = e.GetPosition(ApplicationData.canvas);
 
+            switch (ApplicationData.selectedMenuItem)
+            {
+                case MenuItem.Ellipse: StartShape(position, ForgeShape.Ellipse); break;
+                case MenuItem.Path:
+                    if (ApplicationData.selectedShape == null)
+                    {
+                        StartShape(position, ForgeShape.Path);
+                    }
+                    else
+                    {
+                        SetPathPoint(position);
+                    }
+                    break;
+                case MenuItem.Rectangle: StartShape(position, ForgeShape.Rectangle); break;
+                case MenuItem.None: break;
+                default: break;
+            }
         }
 
         private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (rect != null && GUIData.selectedMenuItem == "rectangle")
+            Point position = e.GetPosition(ApplicationData.canvas);
+            if (ApplicationData.selectedShape != null)
             {
-                updateRectangle(e.GetPosition(this));
+                switch (ApplicationData.selectedMenuItem)
+                {
+                    case MenuItem.Ellipse:   UpdateShape(position); break;
+                    case MenuItem.Path:      UpdatePath(position);  break;
+                    case MenuItem.Rectangle: UpdateShape(position); break;
+                    case MenuItem.None: break;
+                    default: break;
+                }
             }
-            else if (ellipse != null && GUIData.selectedMenuItem == "ellipse")
-            {
-                updateEllipse(e.GetPosition(this));
-            }
-            else if (path != null && GUIData.selectedMenuItem == "path")
-            {
-                updatePath(e.GetPosition(this));
-            }
-
         }
 
         private void MainCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (GUIData.selectedMenuItem == "rectangle")
+            if (ApplicationData.selectedMenuItem != MenuItem.None && ApplicationData.selectedMenuItem != MenuItem.Path)
             {
-                stopRectangle();
-            }
-            else if (GUIData.selectedMenuItem == "ellipse")
-            {
-                stopEllipse();
+                EndShape();
             }
         }
 
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            ApplicationData.lastKeyPressed = e.Key;
+
             switch (e.Key)
             {
-                case Key.P: GUIData.selectedMenuItem = "path"; Console.WriteLine(e.Key); break;
-                case Key.C: GUIData.selectedMenuItem = "ellipse"; break;
-                case Key.R: GUIData.selectedMenuItem = "rectangle";  Console.WriteLine(e.Key); break;
-                case Key.E: GUIData.selectedMenuItem = "ellipse"; Console.WriteLine(e.Key); break;
-                case Key.L: Console.WriteLine(e.Key); break;
-                case Key.Z: EndPath(true); break;
-                case Key.M: rect = null; lastKeyPressed = Key.M; break; 
-                case Key.Escape: GUIData.selectedMenuItem = ""; lastKeyPressed = Key.Escape; break;
-                case Key.LeftCtrl: Console.WriteLine(e.Key); break;
+                case Key.P:         ApplicationData.selectedMenuItem = MenuItem.Path;      break;
+                case Key.R:         ApplicationData.selectedMenuItem = MenuItem.Rectangle; break;
+                case Key.E:         ApplicationData.selectedMenuItem = MenuItem.Ellipse;   break;
+                case Key.L:         break;
+                case Key.Z:         EndPath(true); break;
+                case Key.M:         ApplicationData.selectedShape = null; ApplicationData.selectedMenuItem = MenuItem.None; break; 
+                case Key.Escape:    ApplicationData.selectedShape = null; ApplicationData.selectedMenuItem = MenuItem.None; break;
+                case Key.LeftCtrl:  Console.WriteLine(e.Key); break;
                 default:
                     Console.WriteLine("no valid key pressed");
                     break;
@@ -269,56 +237,59 @@ namespace GUI_BT_SE17
 
         public static void shape_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            
-            GUIData.clickPosition = e.GetPosition(canvas);
-            if (GUIData.selectedMenuItem == "path")
+            ApplicationData.mouseClick = e.GetPosition(ApplicationData.canvas);
+
+            if (ApplicationData.selectedMenuItem == MenuItem.Path)
             {
-                setPathPoint(e.GetPosition(canvas));
+                SetPathPoint(e.GetPosition(ApplicationData.canvas));
                 e.Handled = true;
             }
-            else if (lastKeyPressed == Key.M)
+            else if (ApplicationData.lastKeyPressed == Key.M)
             {
                 
-                if (selectedShape != null && selectedShape.Equals(sender))
+                if (ApplicationData.selectedShape != null && ApplicationData.selectedShape.Equals(sender))
                 {
-                    selectedShape = null;
+                    ApplicationData.selectedShape = null;
                 }
                 else
                 {
-                    selectedShape = (Shape) sender;
+                    ApplicationData.selectedShape = (Shape) sender;
                 }
                 e.Handled = true;
             }
         }
         public static void shape_MouseMove(object sender, MouseEventArgs e)
         {
-            if (selectedShape != null && lastKeyPressed == Key.M)
+            if (ApplicationData.selectedShape != null && ApplicationData.lastKeyPressed == Key.M)
             {
-                if (selectedShape.Equals(sender))
+                if (ApplicationData.selectedShape.Equals(sender))
                 {
-                    var rect = (Shape)sender;
-                    var mousePos = e.GetPosition(canvas);
+                    var shape       = (Shape)sender;
+                    var mousePos    = e.GetPosition(ApplicationData.canvas);
 
-                    double x = mousePos.X - GUIData.clickPosition.X;
-                    double y = mousePos.Y - GUIData.clickPosition.Y;
+                    double x        = mousePos.X - ApplicationData.mouseClick.X;
+                    double y        = mousePos.Y - ApplicationData.mouseClick.Y;
 
-
-
-                    double left = Canvas.GetLeft(rect) + x;
-                    double top  = Canvas.GetTop(rect)  + y;
+                    double left     = Canvas.GetLeft(shape) + x;
+                    double top      = Canvas.GetTop(shape)  + y;
                     
-                    Canvas.SetLeft(rect, left);
-                    Canvas.SetTop(rect, top);
+                    Canvas.SetLeft(shape, left);
+                    Canvas.SetTop(shape, top);
 
-                    GUIData.clickPosition = mousePos;
+                    ApplicationData.mouseClick = mousePos;
+                    e.Handled = true;
                 }
             }
-            e.Handled = true;
+            
         }
 
-        private void MainCanvas_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        internal static void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            EndPath();
+            if (ApplicationData.selectedMenuItem != MenuItem.Path)
+            {
+                ApplicationData.selectedShape = null;
+                e.Handled = true;
+            }
         }
     }
 }

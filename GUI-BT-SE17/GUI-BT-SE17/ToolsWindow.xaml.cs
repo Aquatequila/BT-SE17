@@ -42,11 +42,5 @@ namespace GUI_BT_SE17
             base.OnClosing(e);
         }
 
-        private void shapes_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            string selected = (string) e.AddedItems[0];
-            GUIData.selectedMenuItem = selected;
-
-        }
     }
 }
