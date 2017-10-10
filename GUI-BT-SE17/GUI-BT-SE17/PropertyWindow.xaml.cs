@@ -24,5 +24,39 @@ namespace GUI_BT_SE17
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
         }
+
+        private void FillEnabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationData.selectedShape != null)
+            {
+                Color fill = MainWindow.ExtractARGB();
+                ApplicationData.selectedShape.Fill = new SolidColorBrush(fill);
+            }
+        }
+
+        private void FillEnabled_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationData.selectedShape != null)
+            {
+                ApplicationData.selectedShape.Fill = null;
+            }
+        }
+
+        private void StrokeEnabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationData.selectedShape != null)
+            {
+                Color stroke = MainWindow.ExtractARGB("Stroke");
+                ApplicationData.selectedShape.Stroke = new SolidColorBrush(stroke);
+            }
+        }
+
+        private void StrokeEnabled_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationData.selectedShape != null)
+            {
+                ApplicationData.selectedShape.Stroke = null;
+            }
+        }
     }
 }

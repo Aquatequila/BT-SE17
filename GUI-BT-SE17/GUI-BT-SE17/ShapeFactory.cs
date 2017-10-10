@@ -37,7 +37,7 @@ namespace GUI_BT_SE17
             }
             if (fillSelected)
             {
-                shape.Fill = new SolidColorBrush(fill);
+                shape.Fill =  new SolidColorBrush(fill);
                 // this makes the shape clickable
                 //shape.Fill = new SolidColorBrush(Colors.Transparent);
             }

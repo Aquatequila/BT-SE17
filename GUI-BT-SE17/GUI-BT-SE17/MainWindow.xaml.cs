@@ -48,7 +48,7 @@ namespace GUI_BT_SE17
 
         
 
-        private static Color ExtractARGB(string postfix = "")
+        public static Color ExtractARGB(string postfix = "")
         {
             Color color = new Color();
 
@@ -92,6 +92,8 @@ namespace GUI_BT_SE17
             ApplicationData.mouseClick      = mouseClick;
             CheckBox strokeBox              = (CheckBox)ApplicationData.propertyWindow.FindName("StrokeEnabled");
             CheckBox fillBox                = (CheckBox)ApplicationData.propertyWindow.FindName("FillEnabled");
+            strokeBox.IsChecked = true;
+            fillBox.IsChecked   = true;
             bool strokeEnabled              = UnwrapCheckboxCheckedState(strokeBox.IsChecked);
             bool fillEnabled                = UnwrapCheckboxCheckedState(fillBox.IsChecked);
 

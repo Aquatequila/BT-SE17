@@ -55,6 +55,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationData.cs" />
+    <Compile Include="MyGUIElements.cs" />
+    <Compile Include="PointOperation.cs" />
     <Compile Include="PropertyWindow.xaml.cs">
       <DependentUpon>PropertyWindow.xaml</DependentUpon>
     </Compile>
