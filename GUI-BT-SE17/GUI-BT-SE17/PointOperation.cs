@@ -9,17 +9,42 @@ namespace GUI_BT_SE17
 {
     class PointOperation
     {
+        private static double ConvertRadianToDegree(double radianValue)
+        {
+            return radianValue * 180 / Math.PI;
+        }
+
+        private double GetAlpha(double radius, double x)
+        {
+            return ConvertRadianToDegree(Math.Cos(x / radius));
+        }
+
         public Point RotatePointAroundCenter(Point center, Point point, double degrees)
         {
             int sector;
-            double radius = TheoremOfPythagoras(center, point, out sector);
+            double x, y;
+            double radius = TheoremOfPythagoras(center, point, out sector, out x, out y);
+            x = Math.Abs(x);
+            y = Math.Abs(y);
+            double alpha = GetAlpha(radius, x);
+            alpha += degrees;
+            int sectorChange =(int) (alpha / 90);
+            alpha %= 90;
+
+            double xNew = Math.Sin(alpha) * x;
+            double yNew = Math.Cos(alpha) * y;
+
+            // adjust to sector
+
+
+            
 
             return new Point();
         }
-        public double TheoremOfPythagoras(Point center, Point point, out int sector)
+        public double TheoremOfPythagoras(Point center, Point point, out int sector, out double x, out double y)
         {
-            double x = point.X  - center.X;
-            double y = center.Y - point.Y;
+            x = point.X  - center.X;
+            y = center.Y - point.Y;
 
             sector = GetSectorOfPoint(x,y);
 
@@ -49,7 +74,6 @@ namespace GUI_BT_SE17
                     return 1;
                 }
             }
-            return 1;
         }
         private double SquareAndSum(double x, double y)
         {

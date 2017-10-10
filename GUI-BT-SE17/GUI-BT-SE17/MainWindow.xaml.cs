@@ -42,6 +42,7 @@ namespace GUI_BT_SE17
         {
             ApplicationData.toolsWindow.MakeClosable();
             ApplicationData.toolsWindow.Close();
+            ApplicationData.propertyWindow.Close();
 
             base.OnClosing(e);
         }
