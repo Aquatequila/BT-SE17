@@ -5,13 +5,71 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI_BT_SE17"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="MainWindow" Height="800" Width="1200"
         KeyDown="Window_KeyDown">
-    <Canvas x:Name="MainCanvas" Background="LightGray"  
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top" Background="Black">
+            <ToolBar >
+                <Button x:Name="ToPngButton" Click="ToPngButton_Click" ToolTip="Export as Png">
+                    <Image Source="C:/Users/Gerald/Downloads/PNG.png"  Width="35"/>
+                </Button>
+
+                <Button x:Name="OpenFileButton" Click="OpenFileButton_Click" ToolTip="Open File">
+                    <Image Source="C:/Users/Gerald/Downloads/OPEN.png"  Width="35"/>
+                </Button>
+                <Button x:Name="NewLineTemplate" ToolTip="New Template">
+                    <Image Source="C:/Users/Gerald/Downloads/NEWLINE.png"  Width="35"/>
+                </Button>
+                <Button x:Name="ToSVG" ToolTip="Export as SVG">
+                    <Image Source="C:/Users/Gerald/Downloads/SVG.png"  Width="35"/>
+                </Button>
+                <Button x:Name="SaveFileButton" Click="SaveFileButton_Click" ToolTip="Save File">
+                    <Image Source="C:/Users/Gerald/Downloads/Save.png"  Width="35"/>
+                </Button>
+            </ToolBar>
+            <ToolBar>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="FillCheckbox" VerticalAlignment="Center" Checked="FillCheckbox_Checked" Unchecked="FillCheckbox_Unchecked"></CheckBox>
+                    <Label VerticalAlignment="Center">Fill</Label>
+                </StackPanel>
+                <ComboBox x:Name="FillBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="0">
+                    <ComboBoxItem> Black</ComboBoxItem>
+                    <ComboBoxItem Background="White">White</ComboBoxItem>
+                    <ComboBoxItem Background="Red">Red</ComboBoxItem>
+                    <ComboBoxItem Background="Green">Green</ComboBoxItem>
+                    <ComboBoxItem Background="Blue">Blue</ComboBoxItem>
+                    <ComboBoxItem Background="Yellow">Yellow</ComboBoxItem>
+                    <ComboBoxItem Background="Brown">Brown</ComboBoxItem>
+                </ComboBox>
+
+            </ToolBar>
+            <ToolBar>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="StrokeCheckbox" VerticalAlignment="Center" Checked="StrokeCheckBox_Checked" Unchecked="StrokeCheckBox_Unchecked"></CheckBox>
+                    <Label VerticalAlignment="Center">Stroke</Label>
+                </StackPanel>
+                <ComboBox x:Name="StrokeBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="0">
+                    <ComboBoxItem>Black</ComboBoxItem>
+                    <ComboBoxItem>White</ComboBoxItem>
+                    <ComboBoxItem>Red</ComboBoxItem>
+                    <ComboBoxItem>Green</ComboBoxItem>
+                    <ComboBoxItem>Blue</ComboBoxItem>
+                    <ComboBoxItem>Yellow</ComboBoxItem>
+                    <ComboBoxItem>Brown</ComboBoxItem>
+                </ComboBox>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBox x:Name="StrokeWidth" Width="25" VerticalAlignment="Center" TextAlignment="Right" MaxLength="3" Text="1"/>
+                    <Label VerticalAlignment="Center">px</Label>
+                </StackPanel>
+            </ToolBar>
+        </ToolBarTray>
+        <Canvas x:Name="MainCanvas" Background="LightGray"  
             MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown"
             MouseMove="MainCanvas_MouseMove"
             MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp"
-            MouseRightButtonUp="MainCanvas_MouseRightButtonUp">
-        
-    </Canvas>
+            MouseRightButtonUp="MainCanvas_MouseRightButtonUp"
+              />
+    </DockPanel>
+
+
 </Window>

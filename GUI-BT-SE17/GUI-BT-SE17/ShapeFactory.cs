@@ -49,9 +49,19 @@ namespace GUI_BT_SE17
             }
             
 
-            shape.MouseDown += MainWindow.shape_MouseLeftButtonDown;
+            shape.MouseDown           += MainWindow.shape_MouseLeftButtonDown;
             shape.MouseMove           += MainWindow.shape_MouseMove;
             shape.MouseLeftButtonUp   += MainWindow.shape_MouseLeftButtonUp;
+
+            shape.MouseEnter += (sender, args) => {
+                Shape a = sender as Shape; 
+                a.StrokeThickness *= 3;
+                //a.Fill = new SolidColorBrush(Colors.Beige);
+            };
+            shape.MouseLeave += (sender, args) => {
+                Shape a = sender as Shape;
+                a.StrokeThickness /= 3;
+            };
 
             return shape;
         }

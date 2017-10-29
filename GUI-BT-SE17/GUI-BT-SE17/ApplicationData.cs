@@ -22,8 +22,6 @@ namespace GUI_BT_SE17
     {
         public static MenuItem         selectedMenuItem { get; set; }
         public static Point            mouseClick       { get; set; }
-        public static ToolsWindow      toolsWindow      { get; set; }
-        public static PropertyWindow   propertyWindow   { get; set; }
         public static Shape            selectedShape    { get; set; }
         public static Key              lastKeyPressed   { get; set; }
         public static Canvas           canvas           { get; set; }

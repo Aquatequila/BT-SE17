@@ -1,4 +1,5 @@
-﻿using System; 
+﻿using Microsoft.Win32;
+using System; 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -15,6 +17,12 @@ using System.Windows.Shapes;
 
 namespace GUI_BT_SE17
 {
+    using FileStream = System.IO.FileStream;
+    using File = System.IO.File;
+    using StreamWriter = System.IO.StreamWriter;
+    using FileMode = System.IO.FileMode;
+    using FileAccess = System.IO.FileAccess;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -25,57 +33,18 @@ namespace GUI_BT_SE17
         {
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             InitializeComponent();
-            
-            ApplicationData.toolsWindow     = new ToolsWindow();
-            ApplicationData.toolsWindow.Show();
-            ApplicationData.propertyWindow  = new PropertyWindow();
-            ApplicationData.propertyWindow.Show();
-
-
-            ApplicationData.propertyWindow.Left += this.Width / 2 + ApplicationData.propertyWindow.Width / 2;
 
             ApplicationData.canvas = (Canvas)this.FindName("MainCanvas");
-
-            ApplicationData.toolsWindow.Left -= this.Width / 2 + ApplicationData.toolsWindow.Width/2;
         }
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            ApplicationData.toolsWindow.MakeClosable();
-            ApplicationData.toolsWindow.Close();
-            ApplicationData.propertyWindow.Close();
-
             base.OnClosing(e);
         }
 
-        
-
-        public static Color ExtractARGB(string postfix = "")
+        public Color UnwrapListItemColor(string Name)
         {
-            Color color = new Color();
-
-            TextBox a = (TextBox)ApplicationData.propertyWindow.FindName("aBox" + postfix);
-            TextBox r = (TextBox)ApplicationData.propertyWindow.FindName("rBox" + postfix);
-            TextBox g = (TextBox)ApplicationData.propertyWindow.FindName("gBox" + postfix);
-            TextBox b = (TextBox)ApplicationData.propertyWindow.FindName("bBox" + postfix);
-
-            byte aVal;
-            byte.TryParse(a.Text, out aVal);
-
-            byte rVal;
-            byte.TryParse(r.Text, out rVal);
-
-            byte gVal;
-            byte.TryParse(g.Text, out gVal);
-
-            byte bVal;
-            byte.TryParse(b.Text, out bVal);
-
-            color.A = aVal;
-            color.R = rVal;
-            color.G = gVal;
-            color.B = bVal;
-
-            return color;
+            var comboBox = this.FindName("FillBox") as ComboBox;
+            return (Color) ColorConverter.ConvertFromString(comboBox.Text);
         }
 
         private static bool UnwrapCheckboxCheckedState(bool? state)
@@ -88,18 +57,18 @@ namespace GUI_BT_SE17
             }
         }
 
-        private static void StartShape(Point mouseClick, ForgeShape shape)
+        private void StartShape(Point mouseClick, ForgeShape shape)
         {
             ApplicationData.mouseClick      = mouseClick;
-            CheckBox strokeBox              = (CheckBox)ApplicationData.propertyWindow.FindName("StrokeEnabled");
-            CheckBox fillBox                = (CheckBox)ApplicationData.propertyWindow.FindName("FillEnabled");
+            CheckBox strokeBox              = (CheckBox)this.FindName("StrokeCheckbox");
+            CheckBox fillBox                = (CheckBox)this.FindName("FillCheckbox");
             strokeBox.IsChecked = true;
             fillBox.IsChecked   = true;
             bool strokeEnabled              = UnwrapCheckboxCheckedState(strokeBox.IsChecked);
             bool fillEnabled                = UnwrapCheckboxCheckedState(fillBox.IsChecked);
 
-            Color fill                      = ExtractARGB();
-            Color stroke                    = ExtractARGB("Stroke");
+            Color fill                      = UnwrapListItemColor("FillBox");
+            Color stroke                    = UnwrapListItemColor("StrokeBox");
             ApplicationData.selectedShape   = ShapeFactory.InitShape(stroke, fill, mouseClick, shape, strokeEnabled, fillEnabled);
 
             ApplicationData.canvas.Children.Add(ApplicationData.selectedShape);
@@ -292,6 +261,92 @@ namespace GUI_BT_SE17
             {
                 ApplicationData.selectedShape = null;
                 e.Handled = true;
+            }
+        }
+
+        private void SerializeToXML(MainWindow window, Canvas canvas, string filename)
+        {
+            string mystrXAML = XamlWriter.Save(canvas);
+            FileStream filestream = File.Create(filename);
+            StreamWriter streamwriter = new StreamWriter(filestream);
+            streamwriter.Write(mystrXAML);
+            streamwriter.Close();
+            filestream.Close();
+        }
+
+        private void SaveFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //saveFileDialog.InitialDirectory = @"c:\";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                SerializeToXML(this, ApplicationData.canvas, saveFileDialog.FileName);
+            }
+        }
+
+        private void OpenFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                Console.WriteLine($"file to load = {openFileDialog.FileName}");
+                var fileStream = File.Open(openFileDialog.FileName, FileMode.Open, FileAccess.Read);
+                var canvasLoaded = XamlReader.Load(fileStream) as Canvas;
+                fileStream.Close();
+
+
+            }
+        }
+
+        private void ToPngButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //saveFileDialog.InitialDirectory = @"c:\";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                RenderTargetBitmap bmp = new RenderTargetBitmap((int)this.Width, (int)this.Height, 96, 96, PixelFormats.Default);
+                bmp.Render(ApplicationData.canvas);
+
+                var png = new PngBitmapEncoder();
+                png.Frames.Add(BitmapFrame.Create(bmp));
+                using (var stm = File.Create(saveFileDialog.FileName))
+                {
+                    png.Save(stm);
+                }
+            }
+        }
+
+        private void FillCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationData.selectedShape != null)
+            {
+                Color fill = UnwrapListItemColor("FillBox");
+                ApplicationData.selectedShape.Fill = new SolidColorBrush(fill);
+            }
+        }
+
+        private void FillCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationData.selectedShape != null)
+            {
+                ApplicationData.selectedShape.Fill = null;
+            }
+        }
+
+        private void StrokeCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationData.selectedShape != null)
+            {
+                Color stroke = UnwrapListItemColor("StrokeBox");
+                ApplicationData.selectedShape.Stroke = new SolidColorBrush(stroke);
+            }
+        }
+
+        private void StrokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationData.selectedShape != null)
+            {
+                ApplicationData.selectedShape.Stroke = null;
             }
         }
     }
