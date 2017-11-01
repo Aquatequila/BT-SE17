@@ -7,7 +7,7 @@
     <ProjectGuid>{7B66DF0E-14C8-45DB-A3F8-789C3E562E43}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>GUI_BT_SE17</RootNamespace>
-    <AssemblyName>GUI-BT-SE17</AssemblyName>
+    <AssemblyName>GUI_BT_SE17</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -55,7 +55,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationData.cs" />
-    <Compile Include="MyGUIElements.cs" />
     <Compile Include="ShapeFactory.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -95,6 +94,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PathOperations\SvgPathOperations.csproj">
+      <Project>{5578f8e2-0ca5-4b59-b0ef-784fb2dee16d}</Project>
+      <Name>SvgPathOperations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SvgIO\SvgIO.csproj">
+      <Project>{3d227b11-bf6f-4f7a-a362-de2fd85ac770}</Project>
+      <Name>SvgIO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SvgWrapper\SvgWrapper.csproj">
+      <Project>{a4d5bf52-fd73-41d8-9653-b017f9ff4efd}</Project>
+      <Name>SvgWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
