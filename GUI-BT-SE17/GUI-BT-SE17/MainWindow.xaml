@@ -32,7 +32,7 @@
                     <CheckBox x:Name="FillCheckbox" VerticalAlignment="Center" Checked="FillCheckbox_Checked" Unchecked="FillCheckbox_Unchecked"></CheckBox>
                     <Label VerticalAlignment="Center">Fill</Label>
                 </StackPanel>
-                <ComboBox x:Name="FillBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="0">
+                <ComboBox x:Name="FillBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="0"  SelectionChanged="FillBox_SelectionChanged">
                     <ComboBoxItem> Black</ComboBoxItem>
                     <ComboBoxItem Background="White">White</ComboBoxItem>
                     <ComboBoxItem Background="Red">Red</ComboBoxItem>
@@ -48,7 +48,7 @@
                     <CheckBox x:Name="StrokeCheckbox" VerticalAlignment="Center" Checked="StrokeCheckBox_Checked" Unchecked="StrokeCheckBox_Unchecked"></CheckBox>
                     <Label VerticalAlignment="Center">Stroke</Label>
                 </StackPanel>
-                <ComboBox x:Name="StrokeBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="0">
+                <ComboBox x:Name="StrokeBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="0" SelectionChanged="StrokeBox_SelectionChanged">
                     <ComboBoxItem>Black</ComboBoxItem>
                     <ComboBoxItem>White</ComboBoxItem>
                     <ComboBoxItem>Red</ComboBoxItem>

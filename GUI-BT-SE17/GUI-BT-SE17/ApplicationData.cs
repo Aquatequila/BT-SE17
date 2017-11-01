@@ -18,13 +18,13 @@ namespace GUI_BT_SE17
         None
     }
 
-    class ApplicationData
+    struct ApplicationData
     {
-        public static MenuItem         selectedMenuItem { get; set; }
-        public static Point            mouseClick       { get; set; }
-        public static Shape            selectedShape    { get; set; }
-        public static Key              lastKeyPressed   { get; set; }
-        public static Canvas           canvas           { get; set; }
-        public static String           pathString       { get; set; }
+        public MenuItem         selectedMenuItem { get; set; }
+        public Point            mouseClick       { get; set; }
+        public Shape            selectedShape    { get; set; }
+        public Key              lastKeyPressed   { get; set; }
+        public Canvas           canvas           { get; set; }
+        public String           pathString       { get; set; }
     }
 }
