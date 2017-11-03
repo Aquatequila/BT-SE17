@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Svg.Wrapper;
 using System; 
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,9 @@ namespace GUI_BT_SE17
     /// </summary>
     public partial class MainWindow : Window
     {
+
         static ApplicationData app = new ApplicationData();
+        #region general
         public MainWindow()
         {
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -42,95 +45,113 @@ namespace GUI_BT_SE17
         public Color UnwrapListItemColor(string Name)
         {
             var comboBox = this.FindName(Name) as ComboBox;
-            return (Color) ColorConverter.ConvertFromString(comboBox.Text);
+            return (Color)ColorConverter.ConvertFromString(comboBox.Text);
         }
         private static bool UnwrapCheckboxCheckedState(bool? state)
         {
-            switch(state)
+            switch (state)
             {
-                case true:  return true;
+                case true: return true;
                 case false: return false;
-                default:    return false;
+                default: return false;
             }
         }
-
+        #endregion
+        #region shape functions
         private void StartShape(Point mouseClick, ForgeShape shape)
         {
-            app.mouseClick      = mouseClick;
-            CheckBox strokeBox              = (CheckBox)this.FindName("StrokeCheckbox");
-            CheckBox fillBox                = (CheckBox)this.FindName("FillCheckbox");
+            app.mouseClick = mouseClick;
+            CheckBox strokeBox = (CheckBox)this.FindName("StrokeCheckbox");
+            CheckBox fillBox = (CheckBox)this.FindName("FillCheckbox");
             strokeBox.IsChecked = true;
-            fillBox.IsChecked   = true;
-            bool strokeEnabled              = UnwrapCheckboxCheckedState(strokeBox.IsChecked);
-            bool fillEnabled                = UnwrapCheckboxCheckedState(fillBox.IsChecked);
+            fillBox.IsChecked = false;
+            bool strokeEnabled = UnwrapCheckboxCheckedState(strokeBox.IsChecked);
+            bool fillEnabled = UnwrapCheckboxCheckedState(fillBox.IsChecked);
 
-            Color fill                      = UnwrapListItemColor("FillBox");
-            Color stroke                    = UnwrapListItemColor("StrokeBox");
-            app.selectedShape   = ShapeFactory.InitShape(stroke, fill, mouseClick, shape, strokeEnabled, fillEnabled);
+            Color fill   = UnwrapListItemColor("FillBox");
+            Color stroke = UnwrapListItemColor("StrokeBox");
+
+            app.selectedShape = ShapeContainer.StartPath(mouseClick);
+
+            //app.selectedShape = ShapeFactory.InitShape(stroke, fill, mouseClick, shape, strokeEnabled, fillEnabled);
+            app.selectedShape.Stroke = new SolidColorBrush(Colors.Black);
+            app.selectedShape.StrokeThickness = 1;
+
+            ShapeContainer.SetStrokeColor(Colors.Black);
 
             app.canvas.Children.Add(app.selectedShape);
 
-            if (shape == ForgeShape.Path)
-            {
-                StartPath(mouseClick);
-            }
+            //if (shape == ForgeShape.Path)
+            //{
+            //    StartPath(mouseClick);
+            //}
         }
-        private static void StartPath(Point mouseClick)
-        {
-            app.pathString  = String.Format("M{0} {1}", mouseClick.X, mouseClick.Y);
-            Path path                   = (Path)app.selectedShape;
-            path.Data                   = Geometry.Parse(app.pathString);
-        }
+        //private static void StartPath(Point mouseClick)
+        //{
+        //    app.pathString = String.Format("M{0} {1}", mouseClick.X, mouseClick.Y);
+        //    Path path = (Path)app.selectedShape;
+        //    path.Data = Geometry.Parse(app.pathString);
+        //}
 
         private static void UpdatePath(Point mouseClick)
         {
             Path path = (Path)app.selectedShape;
-            path.Data = Geometry.Parse(String.Format("{0} L {1} {2}", 
-                app.pathString, mouseClick.X, mouseClick.Y));
+            path.Data = ShapeContainer.UpdatePath(mouseClick).Data;
+
+            //Path path = (Path)app.selectedShape;
+            //path.Data = Geometry.Parse(String.Format("{0} L {1} {2}",
+            //    app.pathString, mouseClick.X, mouseClick.Y));
         }
 
         private static void SetPathPoint(Point mouseClick)
         {
-            app.pathString += String.Format(" L {0} {1}", mouseClick.X, mouseClick.Y);
+            //ShapeContainer.UpdatePath(mouseClick);
             Path path = (Path)app.selectedShape;
-            path.Data = Geometry.Parse(app.pathString);
+            path.Data = ShapeContainer.AddLineToPath(mouseClick).Data;
+            //app.pathString += String.Format(" L {0} {1}", mouseClick.X, mouseClick.Y);
+            //Path path = (Path)app.selectedShape;
+            //path.Data = Geometry.Parse(app.pathString);
         }
 
         private void EndPath(bool doClose = false)
         {
-            if (doClose)
-            {
-                app.pathString += "Z";
-            }
-            Path path                       = (Path)app.selectedShape;
-            path.Data                       = Geometry.Parse(app.pathString);
-            app.selectedShape   = null;
-            app.pathString      = "";
+            Path path = (Path)app.selectedShape;
+            path.Data = ShapeContainer.EndPath(doClose).Data;
+            app.selectedShape = null;
+            //if (doClose)
+            //{
+            //    app.pathString += "Z";
+            //}
+            //Path path = (Path)app.selectedShape;
+            //path.Data = Geometry.Parse(app.pathString);
+            //app.selectedShape = null;
+            //app.pathString = "";
         }
 
-        private static void UpdateShape(Point currentMousePosition)
-        {
-            Shape shape     = app.selectedShape;
-            Point position  = app.mouseClick;
+        //private static void UpdateShape(Point currentMousePosition)
+        //{
+        //    Shape shape = app.selectedShape;
+        //    Point position = app.mouseClick;
 
-            shape.Height    = Math.Abs(position.Y - currentMousePosition.Y);
-            shape.Width     = Math.Abs(position.X - currentMousePosition.X);
+        //    shape.Height = Math.Abs(position.Y - currentMousePosition.Y);
+        //    shape.Width = Math.Abs(position.X - currentMousePosition.X);
 
-            if (position.X > currentMousePosition.X) // width invert
-            {
-                Canvas.SetLeft(shape, position.X - shape.Width);
-            }
-            if (position.Y > currentMousePosition.Y) // height invert
-            {
-                Canvas.SetTop(shape, position.Y - shape.Height);
-            }
-        }
+        //    if (position.X > currentMousePosition.X) // width invert
+        //    {
+        //        Canvas.SetLeft(shape, position.X - shape.Width);
+        //    }
+        //    if (position.Y > currentMousePosition.Y) // height invert
+        //    {
+        //        Canvas.SetTop(shape, position.Y - shape.Height);
+        //    }
+        //}
 
         private static void EndShape()
         {
             app.selectedShape = null;
         }
-
+        #endregion
+        #region canvas mouse click
         private void MainCanvas_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             EndPath();
@@ -166,9 +187,7 @@ namespace GUI_BT_SE17
             {
                 switch (app.selectedMenuItem)
                 {
-                    case MenuItem.Ellipse:   UpdateShape(position); break;
-                    case MenuItem.Path:      UpdatePath(position);  break;
-                    case MenuItem.Rectangle: UpdateShape(position); break;
+                    case MenuItem.Path: UpdatePath(position); break;
                     case MenuItem.None: break;
                     default: break;
                 }
@@ -182,7 +201,7 @@ namespace GUI_BT_SE17
                 EndShape();
             }
         }
-
+        #endregion
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
@@ -204,6 +223,7 @@ namespace GUI_BT_SE17
             }
         }
 
+        #region shape functions
         public static void shape_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             app.mouseClick = e.GetPosition(app.canvas);
@@ -215,14 +235,14 @@ namespace GUI_BT_SE17
             }
             else if (app.lastKeyPressed == Key.M)
             {
-                
+
                 if (app.selectedShape != null && app.selectedShape.Equals(sender))
                 {
                     app.selectedShape = null;
                 }
                 else
                 {
-                    app.selectedShape = (Shape) sender;
+                    app.selectedShape = (Shape)sender;
                 }
                 e.Handled = true;
             }
@@ -233,15 +253,15 @@ namespace GUI_BT_SE17
             {
                 if (app.selectedShape.Equals(sender))
                 {
-                    var shape       = (Shape)sender;
-                    var mousePos    = e.GetPosition(app.canvas);
+                    var shape = (Shape)sender;
+                    var mousePos = e.GetPosition(app.canvas);
 
-                    double x        = mousePos.X - app.mouseClick.X;
-                    double y        = mousePos.Y - app.mouseClick.Y;
+                    double x = mousePos.X - app.mouseClick.X;
+                    double y = mousePos.Y - app.mouseClick.Y;
 
-                    double left     = Canvas.GetLeft(shape) + x;
-                    double top      = Canvas.GetTop(shape)  + y;
-                    
+                    double left = Canvas.GetLeft(shape) + x;
+                    double top = Canvas.GetTop(shape) + y;
+
                     Canvas.SetLeft(shape, left);
                     Canvas.SetTop(shape, top);
 
@@ -249,18 +269,13 @@ namespace GUI_BT_SE17
                     e.Handled = true;
                 }
             }
-            
-        }
 
-        internal static void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (app.selectedMenuItem != MenuItem.Path)
-            {
-                app.selectedShape = null;
-                e.Handled = true;
-            }
         }
+        #endregion
 
+
+
+        #region menu buttons
         private void SerializeToXML(MainWindow window, Canvas canvas, string filename)
         {
             string mystrXAML = XamlWriter.Save(canvas);
@@ -270,19 +285,21 @@ namespace GUI_BT_SE17
             streamwriter.Close();
             filestream.Close();
         }
-
         private void SaveFileButton_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             //saveFileDialog.InitialDirectory = @"c:\";
             if (saveFileDialog.ShowDialog() == true)
             {
-                SerializeToXML(this, app.canvas, saveFileDialog.FileName);
+                ShapeContainer.WriteToFile(saveFileDialog.FileName);
+                //SerializeToXML(this, app.canvas, saveFileDialog.FileName);
             }
         }
 
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
         {
+
+
             var openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
@@ -307,13 +324,14 @@ namespace GUI_BT_SE17
 
                 var png = new PngBitmapEncoder();
                 png.Frames.Add(BitmapFrame.Create(bmp));
-                using (var stm = File.Create(saveFileDialog.FileName))
+                using (var stm = File.Create(saveFileDialog.FileName + ".png"))
                 {
                     png.Save(stm);
                 }
             }
         }
-
+#endregion
+        #region stroke fill  boxes
         private void FillCheckbox_Checked(object sender, RoutedEventArgs e)
         {
             if (app.selectedShape != null)
@@ -330,7 +348,6 @@ namespace GUI_BT_SE17
                 app.selectedShape.Fill = null;
             }
         }
-
         private void StrokeCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if (app.selectedShape != null)
@@ -353,8 +370,18 @@ namespace GUI_BT_SE17
             if (app.selectedShape != null)
             {
                 CheckBox box = (CheckBox)FindName("FillCheckbox");
-                box.IsChecked = false;
+                box.IsChecked = true;
+
+                var p = new Path();
+                var b = (ComboBox)sender;
+                p.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(b.Text));
+                p.Stroke = app.selectedShape.Stroke;
+                p.Data = ((Path)app.selectedShape).Data;
+                app.canvas?.Children.Remove(app.selectedShape);
+                app.canvas?.Children.Add(p);
+                app.selectedShape = p;
             }
+            app.canvas?.InvalidateVisual();
         }
 
         private void StrokeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -362,8 +389,10 @@ namespace GUI_BT_SE17
             if (app.selectedShape != null)
             {
                 CheckBox box = (CheckBox)FindName("StrokeCheckbox");
-                box.IsChecked = false;
             }
+            app.canvas?.InvalidateVisual();
         }
+        #endregion
+
     }
 }

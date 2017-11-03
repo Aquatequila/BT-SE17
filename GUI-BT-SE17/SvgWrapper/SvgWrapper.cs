@@ -28,7 +28,16 @@ namespace Svg.Wrapper
             this.Attributes["viewbox"]      = String.Format("0 0 {0} {1}", width, height);
             this.childs                     = new Dictionary<string, SvgElement>();
         }
+        public List<SvgElement> GetSvgElements()
+        {
+            var list = new List<SvgElement>();
 
+            foreach (var pair in childs)
+            {
+                list.Add(pair.Value);
+            }
+            return list;
+        }
         public void SetChild(string id,  SvgElement element)
         {
             childs[id] = element;

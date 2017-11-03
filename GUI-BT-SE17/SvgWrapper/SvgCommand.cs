@@ -5,7 +5,7 @@ namespace Svg.Wrapper
 {
     public enum PointType
     {
-        M, m, L, l, A, a, Q, q
+        M, m, L, l, A, a, Q, q, Z, z
     }
     public struct SvgCommand
     {
@@ -51,7 +51,10 @@ namespace Svg.Wrapper
 
                 case PointType.a:
                     return String.Format("a {0} {1} {2} {3} {4} {5} {6}", this.rx.ToString(nfi), this.ry.ToString(nfi), this.xAxisRotation.ToString(nfi), this.largeArc.ToString(nfi), this.sweep.ToString(nfi), this.x.ToString(nfi), this.y.ToString(nfi));
-
+                case PointType.Z:
+                    return "Z";
+                case PointType.z:
+                    return "z";
                 default:
                     // throw exception
                     return "";

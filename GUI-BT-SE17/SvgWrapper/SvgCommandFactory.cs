@@ -15,8 +15,21 @@
             point.ry = 0;
             point.x1 = 0;
             point.y1 = 0;
-    }
-
+        }
+        public SvgCommand ZCmd()
+        {
+            SvgCommand returnValue = new SvgCommand();
+            InitPoint(returnValue);
+            returnValue.type = PointType.Z;
+            return returnValue;
+        }
+        public SvgCommand zCmd()
+        {
+            SvgCommand returnValue = new SvgCommand();
+            InitPoint(returnValue);
+            returnValue.type = PointType.z;
+            return returnValue;
+        }
         public SvgCommand MCmd(double x, double y)
         {
             SvgCommand returnValue   = new SvgCommand();

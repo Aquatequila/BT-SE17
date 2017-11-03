@@ -15,7 +15,7 @@ using Svg.Wrapper;
 namespace Svg.IO
 {
     
-    class SvgDocumentParser // XAML may need F1 in front of every path lsdflak j
+    public class SvgDocumentParser // XAML may need F1 in front of every path lsdflak j
     {
         private void BitmapWrite() // save WPF canvas as file
         {
@@ -149,7 +149,7 @@ namespace Svg.IO
             return result;
         }
 
-        public SvgDocumentParser(string path = "C:\\Users\\Gerald\\Documents\\Visual Studio 2017\\Projects\\SVGOperationsAndStructure\\SVGOperationsAndStructure\\bin\\Debug\\MySvg.svg")
+        public SvgDocumentParser(string path)
         {
             Path = path;
         }
