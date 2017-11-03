@@ -115,6 +115,8 @@ namespace Svg.IO
                         case "a": i = ParseACommand(i, data, result, false); break;
                         case "Q": i = ParseQCommand(i, data, result); break;
                         case "q": i = ParseQCommand(i, data, result, false); break;
+                        case "Z": i = ParseZCommand(i, data, result); break;
+                        case "z": i = ParseZCommand(i, data, result, false); break;
                         default: throw new NotSupportedException("Parsing failed : Svg command not supported or invalid");
                     }
                 }
@@ -147,6 +149,16 @@ namespace Svg.IO
             }
 
             return result;
+        }
+
+        private int ParseZCommand(int startIndex, List<string> splited, List<SvgCommand> result, bool isAbsolut = true)
+        {
+            if (isAbsolut)
+                result.Add(factory.ZCmd());
+            else
+                result.Add(factory.zCmd());
+
+            return startIndex++;
         }
 
         public SvgDocumentParser(string path)

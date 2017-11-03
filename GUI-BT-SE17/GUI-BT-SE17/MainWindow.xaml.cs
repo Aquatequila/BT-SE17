@@ -303,12 +303,11 @@ namespace GUI_BT_SE17
             var openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                Console.WriteLine($"file to load = {openFileDialog.FileName}");
-                var fileStream = File.Open(openFileDialog.FileName, FileMode.Open, FileAccess.Read);
-                var canvasLoaded = XamlReader.Load(fileStream) as Canvas;
-                fileStream.Close();
-
-
+                //Console.WriteLine($"file to load = {openFileDialog.FileName}");
+                //var fileStream = File.Open(openFileDialog.FileName, FileMode.Open, FileAccess.Read);
+                //var canvasLoaded = XamlReader.Load(fileStream) as Canvas;
+                //fileStream.Close();
+                ShapeContainer.LoadFromFile(openFileDialog.FileName);
             }
         }
 

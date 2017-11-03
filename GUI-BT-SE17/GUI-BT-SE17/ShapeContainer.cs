@@ -31,17 +31,22 @@ namespace GUI_BT_SE17
 
             if (svg.Attributes.TryGetValue("stroke", out var stroke)) 
             {
-
+                Console.WriteLine(stroke);
             }
             if (svg.Attributes.TryGetValue("fill", out var fill))
             {
-
+                Console.WriteLine(fill);
             }
             if (svg.Attributes.TryGetValue("stroke-width", out var px))
             {
-
+                Console.WriteLine(px);
             }
-            path.Data = 
+            string data = "F1";
+            foreach (var command in svg.Path)
+            {
+                data += $" {command.ToString()}";
+            }
+            path.Data = Geometry.Parse(data);
 
             return path;
         }
@@ -59,7 +64,8 @@ namespace GUI_BT_SE17
 
             foreach (var svg in svgs)
             {
-
+                shapes.Add(TransformSvgToXamlPath(svg));
+                shapeIndex++;
             }
         }
 
