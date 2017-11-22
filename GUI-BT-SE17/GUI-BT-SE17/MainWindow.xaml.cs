@@ -1,28 +1,18 @@
 ﻿using Microsoft.Win32;
-using Svg.Wrapper;
-using System; 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace GUI_BT_SE17
 {
-    using FileStream = System.IO.FileStream;
     using File = System.IO.File;
+    using FileStream = System.IO.FileStream;
     using StreamWriter = System.IO.StreamWriter;
-    using FileMode = System.IO.FileMode;
-    using FileAccess = System.IO.FileAccess;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -114,7 +104,8 @@ namespace GUI_BT_SE17
         }
 
         private void EndPath(bool doClose = false)
-        {
+        { 
+            ShapeContainer.RemoveLastPoint();
             Path path = (Path)app.selectedShape;
             path.Data = ShapeContainer.EndPath(doClose).Data;
             app.selectedShape = null;

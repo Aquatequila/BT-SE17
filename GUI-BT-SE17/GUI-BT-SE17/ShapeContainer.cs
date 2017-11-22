@@ -23,6 +23,13 @@ namespace GUI_BT_SE17
         private static Color strokeColor;
         private static int strokeWidth;
 
+        public static Path RemoveLastPoint()
+        {
+            newPath.RemoveAt(pathIndex--);
+            shapes[shapeIndex].Data = Geometry.Parse(GetNewPathString());
+            return shapes[shapeIndex];
+        }
+
         private static Path TransformSvgToXamlPath(SvgElement svg)
         {
             var path = new Path();
@@ -31,6 +38,7 @@ namespace GUI_BT_SE17
 
             if (svg.Attributes.TryGetValue("stroke", out var stroke)) 
             {
+                string xamlColor = stroke.Insert(1, "FF");
                 Console.WriteLine(stroke);
             }
             if (svg.Attributes.TryGetValue("fill", out var fill))
