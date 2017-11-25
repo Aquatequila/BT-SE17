@@ -3,6 +3,7 @@ using Svg.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -21,6 +22,7 @@ namespace GUI_BT_SE17
         private static List<bool> wasSet;
         private static Color fillColor;
         private static Color strokeColor;
+
         private static int strokeWidth;
 
         public static Path RemoveLastPoint()
@@ -39,14 +41,18 @@ namespace GUI_BT_SE17
             if (svg.Attributes.TryGetValue("stroke", out var stroke)) 
             {
                 string xamlColor = stroke.Insert(1, "FF");
-                Console.WriteLine(stroke);
+                path.Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString(xamlColor));
+                Console.WriteLine(xamlColor);
             }
             if (svg.Attributes.TryGetValue("fill", out var fill))
             {
-                Console.WriteLine(fill);
+                string xamlColor = fill.Insert(1, "FF");
+                path.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(xamlColor));
+                Console.WriteLine(xamlColor);
             }
             if (svg.Attributes.TryGetValue("stroke-width", out var px))
             {
+                path.StrokeThickness = int.Parse(px);
                 Console.WriteLine(px);
             }
             string data = "F1";
@@ -59,7 +65,7 @@ namespace GUI_BT_SE17
             return path;
         }
 
-        public static void LoadFromFile(string path)
+        public static void LoadFromFile(string path, Canvas canvas)
         {
             var parser = new SvgDocumentParser(path);
             var wrapper = parser.Parse();
@@ -73,6 +79,7 @@ namespace GUI_BT_SE17
             foreach (var svg in svgs)
             {
                 shapes.Add(TransformSvgToXamlPath(svg));
+                canvas.Children.Add(shapes[shapeIndex]);
                 shapeIndex++;
             }
         }
@@ -90,7 +97,6 @@ namespace GUI_BT_SE17
 
             writer.WriteToFile(path, wrapper);
         }
-
 
         private static string GetNewPathString()
         {
@@ -178,7 +184,7 @@ namespace GUI_BT_SE17
 
             if (wasSet[0])
             {
-                string s = shapes[shapeIndex].Stroke.ToString();
+                string s = shapes[shapeIndex].Fill.ToString();
                 svg.Attributes.Add("fill", s.Remove(1, 2));
             }
                 
@@ -207,7 +213,5 @@ namespace GUI_BT_SE17
 
             return shapes[shapeIndex++];
         }
-
-
     }
 }

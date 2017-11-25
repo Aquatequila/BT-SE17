@@ -55,8 +55,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationData.cs" />
+    <Compile Include="ButtonHandler.cs" />
+    <Compile Include="CanvasLogic.cs" />
+    <Compile Include="CreateShapeLogic.cs" />
     <Compile Include="ShapeFactory.cs" />
     <Compile Include="ShapeContainer.cs" />
+    <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

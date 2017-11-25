@@ -10,21 +10,14 @@ using System.Windows.Shapes;
 
 namespace GUI_BT_SE17
 {
-    enum MenuItem
-    {
-        Rectangle,
-        Ellipse,
-        Path,
-        None
-    }
+    
 
-    struct ApplicationData
-    {
-        public MenuItem         selectedMenuItem { get; set; }
-        public Point            mouseClick       { get; set; }
-        public Shape            selectedShape    { get; set; }
-        public Key              lastKeyPressed   { get; set; }
-        public Canvas           canvas           { get; set; }
-        public String           pathString       { get; set; }
-    }
+    //public struct ApplicationData
+    //{
+    //    public MenuItem         selectedMenuItem { get; set; }
+    //    public Point            mouseClick       { get; set; }
+    //    //public Shape            selectedShape    { get; set; }
+    //    public Key              lastKeyPressed   { get; set; }
+    //    public String           pathString       { get; set; }
+    //}
 }
