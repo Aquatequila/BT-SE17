@@ -1,6 +1,5 @@
 ﻿using Svg.Wrapper;
 using System;
-using System.Collections.Generic;
 
 namespace Svg.Path.Operations
 {

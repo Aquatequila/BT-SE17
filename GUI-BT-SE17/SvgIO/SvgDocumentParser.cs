@@ -8,9 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.IO;
 using Svg.Wrapper;
-// TODO: Canvas -> Bitmap; transformation
-//RenderTargetBitmap bmp = new RenderTargetBitmap((int)Canvas1.Width, (int)Canvas1.Height, 96, 96, PixelFormats.Default);
-//bmp.Render(Canvas1);
 
 namespace Svg.IO
 {

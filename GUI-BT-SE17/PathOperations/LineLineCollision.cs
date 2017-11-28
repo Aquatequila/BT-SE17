@@ -111,8 +111,6 @@ namespace Svg.Path.Operations
                 //return null;
             }
 
-
-
             double x = (B2 * C1 - B1 * C2) / det;
             double y = (A1 * C2 - A2 * C1) / det;
 

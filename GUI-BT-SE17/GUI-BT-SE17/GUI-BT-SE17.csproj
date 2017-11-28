@@ -54,7 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AnnotationWrapper.cs" />
+    <Compile Include="Wrapper\AnnotationWrapper.cs" />
     <Compile Include="Functionality\ButtonHandler.cs" />
     <Compile Include="Functionality\CanvasLogic.cs" />
     <Compile Include="Functionality\CreateShapeLogic.cs" />
@@ -63,6 +63,7 @@
     <Compile Include="SvgTemplateLoader.cs" />
     <Compile Include="TemplateItem.cs" />
     <Compile Include="ViewModel.cs" />
+    <Compile Include="Wrapper\TemplateWrapper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
