@@ -1,5 +1,6 @@
 ﻿using Svg.Wrapper;
 using System;
+using System.Collections.Generic;
 
 namespace Svg.Path.Operations
 {
@@ -26,25 +27,18 @@ namespace Svg.Path.Operations
             minY = minY < y ? minY : y;
         }
     }
+
     public static class PathMatrixOperation
     {
         public static void RotatePathToDegrees(ref SvgElement svg, double degrees, SvgCommand center)
         {
             for (var i = 0; i < svg.Path.Count; i++)
             {
-               // Console.WriteLine("start" + svg.Path[i].x + ", " + svg.Path[i].y);
-
                 svg.Path[i] = NormalizePoint(svg.Path[i], center);
-
-                //Console.WriteLine("norm : " + svg.Path[i].x + ", " + svg.Path[i].y);
 
                 svg.Path[i] = RotatePointToDegrees(svg.Path[i], degrees, center);
 
-                //Console.WriteLine("rotate : " + svg.Path[i].x + ", " + svg.Path[i].y);
-
                 svg.Path[i] = DenormalizePoint(svg.Path[i], center);
-
-                //Console.WriteLine("denorm : " + svg.Path[i].x + ", " + svg.Path[i].y);
             }
         }
 
@@ -93,7 +87,6 @@ namespace Svg.Path.Operations
             Console.WriteLine($"Angle : {angle}");
             return angle;
         }
-            
 
         public static BoundingRectangle CalculateBoundingRectangle(SvgElement svg)
         {

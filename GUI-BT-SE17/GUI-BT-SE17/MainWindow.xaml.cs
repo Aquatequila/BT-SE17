@@ -35,7 +35,6 @@ namespace GUI_BT_SE17
         {
             InitializeComponent();
             WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-            
 
             InitViewModel();
 
@@ -73,52 +72,52 @@ namespace GUI_BT_SE17
         }
 
         #region shape functions
-        public static void shape_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            viewModel.MouseClick = e.GetPosition(viewModel.Canvas);
+        //public static void shape_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    viewModel.MouseClick = e.GetPosition(viewModel.Canvas);
 
-            if (viewModel.SelectedMenuItem == MenuCommand.Path)
-            {
-                CreateShapeLogic.SetPathPoint(e.GetPosition(viewModel.Canvas), viewModel);
-                e.Handled = true;
-            }
-            else if (viewModel.PressedKey == Key.M)
-            {
-                if (viewModel.SelectedShape != null && viewModel.SelectedShape.Equals(sender))
-                {
-                    viewModel.SelectedShape = null;
-                }
-                else
-                {
-                    viewModel.SelectedShape = (Shape)sender;
-                }
-                e.Handled = true;
-            }
-        }
-        public static void shape_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (viewModel.SelectedShape != null && viewModel.PressedKey == Key.M)
-            {
-                if (viewModel.SelectedShape.Equals(sender))
-                {
-                    var shape = (Shape)sender;
-                    var mousePos = e.GetPosition(viewModel.Canvas);
+        //    if (viewModel.SelectedMenuItem == MenuCommand.Path)
+        //    {
+        //        CreateShapeLogic.SetPathPoint(e.GetPosition(viewModel.Canvas), viewModel);
+        //        e.Handled = true;
+        //    }
+        //    else if (viewModel.PressedKey == Key.M)
+        //    {
+        //        if (viewModel.SelectedShape != null && viewModel.SelectedShape.Equals(sender))
+        //        {
+        //            viewModel.SelectedShape = null;
+        //        }
+        //        else
+        //        {
+        //            viewModel.SelectedShape = (Shape)sender;
+        //        }
+        //        e.Handled = true;
+        //    }
+        //}
+        //public static void shape_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    if (viewModel.SelectedShape != null && viewModel.PressedKey == Key.M)
+        //    {
+        //        if (viewModel.SelectedShape.Equals(sender))
+        //        {
+        //            var shape = (Shape)sender;
+        //            var mousePos = e.GetPosition(viewModel.Canvas);
 
-                    double x = mousePos.X - viewModel.MouseClick.X;
-                    double y = mousePos.Y - viewModel.MouseClick.Y;
+        //            double x = mousePos.X - viewModel.MouseClick.X;
+        //            double y = mousePos.Y - viewModel.MouseClick.Y;
 
-                    double left = Canvas.GetLeft(shape) + x;
-                    double top = Canvas.GetTop(shape) + y;
+        //            double left = Canvas.GetLeft(shape) + x;
+        //            double top = Canvas.GetTop(shape) + y;
 
-                    Canvas.SetLeft(shape, left);
-                    Canvas.SetTop(shape, top);
+        //            Canvas.SetLeft(shape, left);
+        //            Canvas.SetTop(shape, top);
 
-                    viewModel.MouseClick = mousePos;
-                    e.Handled = true;
-                }
-            }
+        //            viewModel.MouseClick = mousePos;
+        //            e.Handled = true;
+        //        }
+        //    }
 
-        }
+        //}
         #endregion
 
         #region menu buttons
@@ -181,17 +180,16 @@ namespace GUI_BT_SE17
             }
         }
 
-        private void FillBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void FillBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (viewModel.SelectedShape != null)
             {
-                viewModel.SelectedShape = viewModel.SelectedShape;
                 viewModel.FillEnabled = true;
                 viewModel.SelectedShape.Fill = new SolidColorBrush(viewModel.FillColor);
             }
         }
 
-        private void StrokeBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void StrokeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (viewModel.SelectedShape != null)
             {

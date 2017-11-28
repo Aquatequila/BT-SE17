@@ -54,12 +54,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ApplicationData.cs" />
-    <Compile Include="ButtonHandler.cs" />
-    <Compile Include="CanvasLogic.cs" />
-    <Compile Include="CreateShapeLogic.cs" />
-    <Compile Include="ShapeFactory.cs" />
-    <Compile Include="ShapeContainer.cs" />
+    <Compile Include="AnnotationWrapper.cs" />
+    <Compile Include="Functionality\ButtonHandler.cs" />
+    <Compile Include="Functionality\CanvasLogic.cs" />
+    <Compile Include="Functionality\CreateShapeLogic.cs" />
+    <Compile Include="Shapes\ShapeFactory.cs" />
+    <Compile Include="Shapes\ShapeContainer.cs" />
+    <Compile Include="SvgTemplateLoader.cs" />
+    <Compile Include="TemplateItem.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

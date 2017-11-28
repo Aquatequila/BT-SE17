@@ -32,11 +32,9 @@ namespace GUI_BT_SE17
             return shapes[shapeIndex];
         }
 
-        private static Path TransformSvgToXamlPath(SvgElement svg)
+        public static Path TransformSvgToXamlPath(SvgElement svg)
         {
             var path = new Path();
-
-            // TODO: parse svg to xaml
 
             if (svg.Attributes.TryGetValue("stroke", out var stroke)) 
             {

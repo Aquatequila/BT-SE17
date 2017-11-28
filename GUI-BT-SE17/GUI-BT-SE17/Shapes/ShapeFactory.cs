@@ -49,8 +49,8 @@ namespace GUI_BT_SE17
             }
             
 
-            shape.MouseDown           += MainWindow.shape_MouseLeftButtonDown;
-            shape.MouseMove           += MainWindow.shape_MouseMove;
+            //shape.MouseDown           += MainWindow.shape_MouseLeftButtonDown;
+            //shape.MouseMove           += MainWindow.shape_MouseMove;
             //shape.MouseLeftButtonUp += MainWindow.shape_MouseLeftButtonUp;
 
             shape.MouseEnter += (sender, args) => {

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BT.ViewModel"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1200"
+        Title="Svg Template Editor" Height="800" Width="1200"
         KeyDown="Window_KeyDown">
     <Window.Resources>
         
@@ -71,13 +71,53 @@
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
+        <ListView Width="185" Background="Black"  ScrollViewer.HorizontalScrollBarVisibility="Auto">
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Width="185" Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+            <ListViewItem Width="90">
+                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
+            </ListViewItem>
+        </ListView>
+
         <ContentPresenter Content="{Binding Path=Canvas}" Focusable="true"></ContentPresenter>
-        <!--<Canvas x:Name="MainCanvas" Background="LightGray"  
-            MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown"
-            MouseMove="MainCanvas_MouseMove"
-            MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp"
-            MouseRightButtonUp="MainCanvas_MouseRightButtonUp"
-              />-->
     </DockPanel>
 
 

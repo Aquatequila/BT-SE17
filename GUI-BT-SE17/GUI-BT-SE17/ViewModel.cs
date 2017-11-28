@@ -30,6 +30,18 @@ namespace BT.ViewModel
         private ComboBox strokeComboBox;
         private ComboBox fillComboBox;
 
+        public List<TemplateItem> ItemsTemplates
+        {
+            get; private set;
+        }
+
+        private String templatePath = @"../../../Templates";
+        private SvgTemplateLoader templates;
+        private String patternPath = @"../../../Patterns";
+        private SvgTemplateLoader patterns;
+        //var a = new SvgTemplateLoader(@"../../../Templates");
+        //a.PrintFileNames();
+
         public ViewModel(CheckBox stroke, CheckBox fill, ComboBox colorStroke, ComboBox colorFill, Canvas canvas)
         {
             strokeBox = stroke;
@@ -37,6 +49,11 @@ namespace BT.ViewModel
             strokeComboBox = colorStroke;
             fillComboBox = colorFill;
             Canvas = canvas;
+
+            templates = new SvgTemplateLoader(templatePath);
+            patterns = new SvgTemplateLoader(patternPath);
+
+            ItemsTemplates = templates.GetItems();
         }
 
         private Shape selectedShape;

@@ -18,11 +18,13 @@ namespace GUI_BT_SE17
         {
             var saveFileDialog = new SaveFileDialog();
             
-            //saveFileDialog.InitialDirectory = @"c:\";
+            saveFileDialog.InitialDirectory = @"C:\";
+            saveFileDialog.RestoreDirectory = true;
+
             if (saveFileDialog.ShowDialog() == true)
             {
                 RenderTargetBitmap bmp = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Default);
-                canvas.Background = new SolidColorBrush(Colors.Transparent);
+                canvas.Background = new SolidColorBrush(Colors.White);
                 bmp.Render(canvas);
 
                 var png = new PngBitmapEncoder();
@@ -32,6 +34,11 @@ namespace GUI_BT_SE17
                     png.Save(stm);
                 }
             }
+        }
+
+        public Canvas Refactor()
+        {
+            return null;
         }
     }
 }
