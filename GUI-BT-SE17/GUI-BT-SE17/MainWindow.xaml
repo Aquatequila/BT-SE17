@@ -34,10 +34,10 @@
             </ToolBar>
             <ToolBar>
                 <StackPanel Orientation="Horizontal">
-                    <CheckBox x:Name="FillCheckbox" VerticalAlignment="Center" IsChecked="{Binding Path=FillEnabled}" Checked="FillCheckbox_Checked" Unchecked="FillCheckbox_Unchecked"></CheckBox>
+                    <CheckBox x:Name="FillCheckbox" VerticalAlignment="Center" IsChecked="{Binding Path=FillEnabled}"></CheckBox>
                     <Label VerticalAlignment="Center">Fill</Label>
                 </StackPanel>
-                <ComboBox x:Name="FillBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="{Binding Path=SelectedFillColorIndex}" SelectionChanged="FillBox_SelectionChanged">
+                <ComboBox x:Name="FillBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="{Binding Path=SelectedFillColorIndex}">
                     <ComboBoxItem>Black</ComboBoxItem>
                     <ComboBoxItem Background="White">White</ComboBoxItem>
                     <ComboBoxItem Background="Red">Red</ComboBoxItem>
@@ -49,10 +49,10 @@
             </ToolBar>
             <ToolBar>
                 <StackPanel Orientation="Horizontal">
-                    <CheckBox x:Name="StrokeCheckbox" IsChecked="{Binding Path=StrokeEnabled}" VerticalAlignment="Center" Checked="StrokeCheckBox_Checked" Unchecked="StrokeCheckBox_Unchecked"></CheckBox>
+                    <CheckBox x:Name="StrokeCheckbox" IsChecked="{Binding Path=StrokeEnabled}" VerticalAlignment="Center"></CheckBox>
                     <Label VerticalAlignment="Center">Stroke</Label>
                 </StackPanel>
-                <ComboBox x:Name="StrokeBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="{Binding Path=SelectedStrokeColorIndex}" SelectionChanged="StrokeBox_SelectionChanged">
+                <ComboBox x:Name="StrokeBox" Margin="0" VerticalAlignment="Center" Width="60" SelectedIndex="{Binding Path=SelectedStrokeColorIndex}">
                     <ComboBoxItem>Black</ComboBoxItem>
                     <ComboBoxItem>White</ComboBoxItem>
                     <ComboBoxItem>Red</ComboBoxItem>
@@ -71,7 +71,7 @@
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
-        <ListView Width="185" Background="Black"  ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <ListView SelectedIndex="{Binding Path=AnnotationIndex}" Width="185" Background="Black"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemsSource="{Binding Path=Templates, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -79,42 +79,16 @@
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
 
-            <ListViewItem Width="90">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Image Width="80" Source="{Binding Path=PngPath}"></Image>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <!--<ListViewItem Width="90">
                 <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
-            <ListViewItem Width="90">
-                <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
-            </ListViewItem>
+            </ListViewItem>-->
+            
         </ListView>
 
         <ContentPresenter Content="{Binding Path=Canvas}" Focusable="true"></ContentPresenter>

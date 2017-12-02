@@ -1,4 +1,5 @@
 ﻿using BT.ViewModel;
+using GUI_BT_SE17.Enums;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -42,19 +43,12 @@ namespace GUI_BT_SE17
 
             switch (ViewModel.SelectedMenuItem)
             {
-                case MenuCommand.Ellipse: CreateShapeLogic.StartShape(position, ForgeShape.Ellipse, ViewModel); break;
-                case MenuCommand.Path:
-                    if (ViewModel.SelectedShape == null)
+                case Operation.Path:
                     {
-                        CreateShapeLogic.StartShape(position, ForgeShape.Path, ViewModel);
+                        if (ViewModel.SelectedShape == null) CreateShapeLogic.StartShape(position, ViewModel);
+                        else CreateShapeLogic.SetPathPoint(position, ViewModel);
+                        break;
                     }
-                    else
-                    {
-                        CreateShapeLogic.SetPathPoint(position, ViewModel);
-                    }
-                    break;
-                case MenuCommand.Rectangle: CreateShapeLogic.StartShape(position, ForgeShape.Rectangle, ViewModel); break;
-                case MenuCommand.None: break;
                 default: break;
             }
         }
@@ -62,12 +56,13 @@ namespace GUI_BT_SE17
         private void MouseMove(object sender, MouseEventArgs e)
         {
             Point position = e.GetPosition(ViewModel.Canvas);
+
             if (ViewModel.SelectedShape != null)
             {
                 switch (ViewModel.SelectedMenuItem)
                 {
-                    case MenuCommand.Path: CreateShapeLogic.UpdatePath(position, ViewModel); break;
-                    case MenuCommand.None: break;
+                    case Operation.Path: CreateShapeLogic.UpdatePath(position, ViewModel); break;
+                    case Operation.None: break;
                     default: break;
                 }
             }
@@ -75,7 +70,7 @@ namespace GUI_BT_SE17
 
         private void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (ViewModel.SelectedMenuItem != MenuCommand.None && ViewModel.SelectedMenuItem != MenuCommand.Path)
+            if (ViewModel.SelectedMenuItem != Operation.None && ViewModel.SelectedMenuItem != Operation.Path)
             {
                 CreateShapeLogic.EndShape(ViewModel);
             }

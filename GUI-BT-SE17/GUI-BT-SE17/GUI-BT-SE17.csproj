@@ -54,16 +54,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Wrapper\AnnotationWrapper.cs" />
-    <Compile Include="Functionality\ButtonHandler.cs" />
-    <Compile Include="Functionality\CanvasLogic.cs" />
+    <Compile Include="Enums\Operation.cs" />
+    <Compile Include="Shapes\AnnotationDrawer.cs" />
+    <Compile Include="Shapes\Helper.cs" />
+    <Compile Include="Templates\Annotations\AnnotationWrapper.cs" />
+    <Compile Include="Button\ButtonHandler.cs" />
+    <Compile Include="Canvas\CanvasLogic.cs" />
     <Compile Include="Functionality\CreateShapeLogic.cs" />
-    <Compile Include="Shapes\ShapeFactory.cs" />
     <Compile Include="Shapes\ShapeContainer.cs" />
-    <Compile Include="SvgTemplateLoader.cs" />
-    <Compile Include="TemplateItem.cs" />
-    <Compile Include="ViewModel.cs" />
-    <Compile Include="Wrapper\TemplateWrapper.cs" />
+    <Compile Include="Templates\SvgTemplateLoader.cs" />
+    <Compile Include="Templates\TemplateItem.cs" />
+    <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="Templates\Replacements\TemplateWrapper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -134,5 +136,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\test.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

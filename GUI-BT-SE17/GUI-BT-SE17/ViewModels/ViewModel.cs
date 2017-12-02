@@ -1,6 +1,8 @@
 ﻿using GUI_BT_SE17;
+using GUI_BT_SE17.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,14 +12,6 @@ using System.Windows.Shapes;
 
 namespace BT.ViewModel
 {
-    public enum MenuCommand
-    {
-        Rectangle,
-        Ellipse,
-        Path,
-        None
-    }
-
     public class ViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -27,17 +21,41 @@ namespace BT.ViewModel
         private ComboBox strokeComboBox;
         private ComboBox fillComboBox;
 
-        public List<TemplateItem> ItemsTemplates
+        public ObservableCollection<TemplateItem> Templates
         {
-            get; private set;
+            get
+            {
+                return templates;
+            }
+            set
+            {
+                templates = value;
+            }
         }
 
+        private int annotationIndex;
+        public int AnnotationIndex
+        {
+            get
+            {
+                return annotationIndex;
+            }
+            set
+            {
+                if (value != annotationIndex)
+                {
+                    annotationIndex = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AnnotationIndex)));
+                }
+            }
+        }
+
+        private ObservableCollection<TemplateItem> templates;
+
         private String templatePath = @"../../../Templates";
-        private SvgTemplateLoader templates;
         private String patternPath = @"../../../Patterns";
-        private SvgTemplateLoader patterns;
-        //var a = new SvgTemplateLoader(@"../../../Templates");
-        //a.PrintFileNames();
+        private TemplateLoader patterns;
+        private TemplateLoader templateLoader;
 
         public ViewModel(CheckBox stroke, CheckBox fill, ComboBox colorStroke, ComboBox colorFill, Canvas canvas)
         {
@@ -47,11 +65,13 @@ namespace BT.ViewModel
             fillComboBox = colorFill;
             Canvas = canvas;
 
-            templates = new SvgTemplateLoader(templatePath);
-            patterns = new SvgTemplateLoader(patternPath);
+            templateLoader = new TemplateLoader(templatePath);
+            patterns = new TemplateLoader(patternPath);
 
-            ItemsTemplates = templates.GetItems();
+            Templates = templateLoader.GetItems();
+            Templates[0].PngPath = @"/../../Pictures/test.png";
         }
+
 
         private Shape selectedShape;
         public Shape SelectedShape
@@ -69,6 +89,10 @@ namespace BT.ViewModel
                 if (value > 0)
                 {
                     pixel = value;
+
+                    if (selectedShape != null)
+                        SelectedShape.StrokeThickness = pixel;
+
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Pixel)));
                 }
             }
@@ -84,6 +108,14 @@ namespace BT.ViewModel
                 {
                     fillEnabled = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillEnabled)));
+
+                    if (selectedShape != null)
+                    {
+                        if (fillEnabled == true)
+                            selectedShape.Fill = new SolidColorBrush(FillColor);
+                        else
+                            selectedShape.Fill = null;
+                    }
                 }
             }
         }
@@ -98,10 +130,17 @@ namespace BT.ViewModel
                 {
                     strokeEnabled = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StrokeEnabled)));
+
+                    if (selectedShape != null)
+                    {
+                        if (strokeEnabled == true)
+                            selectedShape.Stroke = new SolidColorBrush(StrokeColor);
+                        else
+                            selectedShape.Stroke = null;
+                    }
                 }
             }
         }
-
 
         private int selectedFillColorIndex = 4;
         public int SelectedFillColorIndex
@@ -113,6 +152,8 @@ namespace BT.ViewModel
                 {
                     selectedFillColorIndex = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedFillColorIndex)));
+
+                    FillEnabled = true;
                 }
             }
         }
@@ -126,6 +167,9 @@ namespace BT.ViewModel
                 if (value > -1 && value < 7 && value != selectedStrokeColorIndex)
                 {
                     selectedStrokeColorIndex = value;
+
+                    StrokeEnabled = true;
+
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedStrokeColorIndex)));
                 }
             }
@@ -192,8 +236,8 @@ namespace BT.ViewModel
             set { mouseClick = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MouseClick))); }
         }
 
-        private MenuCommand selectedMenuItem;
-        public MenuCommand SelectedMenuItem
+        private Operation selectedMenuItem;
+        public Operation SelectedMenuItem
         {
             get { return selectedMenuItem; }
             set { selectedMenuItem = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedMenuItem))); }

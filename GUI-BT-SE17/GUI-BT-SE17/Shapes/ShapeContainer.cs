@@ -1,4 +1,5 @@
-﻿using Svg.IO;
+﻿using GUI_BT_SE17.Shapes;
+using Svg.IO;
 using Svg.Wrapper;
 using System;
 using System.Collections.Generic;
@@ -32,37 +33,6 @@ namespace GUI_BT_SE17
             return shapes[shapeIndex];
         }
 
-        public static Path TransformSvgToXamlPath(SvgElement svg)
-        {
-            var path = new Path();
-
-            if (svg.Attributes.TryGetValue("stroke", out var stroke)) 
-            {
-                string xamlColor = stroke.Insert(1, "FF");
-                path.Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString(xamlColor));
-                Console.WriteLine(xamlColor);
-            }
-            if (svg.Attributes.TryGetValue("fill", out var fill))
-            {
-                string xamlColor = fill.Insert(1, "FF");
-                path.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(xamlColor));
-                Console.WriteLine(xamlColor);
-            }
-            if (svg.Attributes.TryGetValue("stroke-width", out var px))
-            {
-                path.StrokeThickness = int.Parse(px);
-                Console.WriteLine(px);
-            }
-            string data = "F1";
-            foreach (var command in svg.Path)
-            {
-                data += $" {command.ToString()}";
-            }
-            path.Data = Geometry.Parse(data);
-
-            return path;
-        }
-
         public static void LoadFromFile(string path, Canvas canvas)
         {
             var parser = new SvgDocumentParser(path);
@@ -76,7 +46,7 @@ namespace GUI_BT_SE17
 
             foreach (var svg in svgs)
             {
-                shapes.Add(TransformSvgToXamlPath(svg));
+                shapes.Add(Helper.TransformSvgToXamlPath(svg));
                 canvas.Children.Add(shapes[shapeIndex]);
                 shapeIndex++;
             }
@@ -135,7 +105,6 @@ namespace GUI_BT_SE17
             wasSet.Add(false);
             wasSet.Add(false);
             wasSet.Add(false);
-
 
             newPath = new List<SvgCommand>();
             newPath.Add(factory.MCmd(mouseClick.X, mouseClick.Y));

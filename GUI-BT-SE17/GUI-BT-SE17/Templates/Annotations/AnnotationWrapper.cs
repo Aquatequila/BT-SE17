@@ -1,4 +1,5 @@
-﻿using Svg.Path.Operations;
+﻿using GUI_BT_SE17.Shapes;
+using Svg.Path.Operations;
 using Svg.Wrapper;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace GUI_BT_SE17
 {
-    using Shapes = List<Shape>;
+    using Shapez = List<Shape>;
 
     public class AnnotationWrapper
     {
@@ -57,18 +58,18 @@ namespace GUI_BT_SE17
             upToDate = false;
         }
 
-        private Shapes shapes;
-        public Shapes Shapes
+        private Shapez shapes;
+        public Shapez Shapes
         {
             get
             {
                 if (!upToDate)
                 {
-                    shapes = new Shapes();
+                    shapes = new Shapez();
 
                     foreach (var svg in Svgs)
                     {
-                        shapes.Add(ShapeContainer.TransformSvgToXamlPath(svg));
+                        shapes.Add(Helper.TransformSvgToXamlPath(svg));
                     }
                 }
                 return shapes;

@@ -7,7 +7,7 @@ namespace GUI_BT_SE17
     internal static class CreateShapeLogic
     {
         #region shape functions
-        public static void StartShape(Point mouseClick, ForgeShape shape, ViewModel model)
+        public static void StartShape(Point mouseClick, ViewModel model)
         {
             model.MouseClick = mouseClick;
 
@@ -18,7 +18,7 @@ namespace GUI_BT_SE17
 
             ShapeContainer.SetStrokeColor(model.StrokeColor);
             ShapeContainer.SetStrokeWidth(model.Pixel);
-            ShapeContainer.SetFillColor(model.FillColor);
+            //ShapeContainer.SetFillColor(model.FillColor);
 
             model.Canvas.Children.Add(model.SelectedShape);
         }
