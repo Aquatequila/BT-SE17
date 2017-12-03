@@ -15,15 +15,14 @@ namespace GUI_BT_SE17
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-
         public List<SvgElement> Svgs
         {
             get;
             private set;
         }
-        public BoundingRectangle BoundingBox { get; }
         public int Count { get; }
 
+        public BoundingRectangle BoundingBox { get; private set; }
 
         //private PngBitmapEncoder png;
 
@@ -52,7 +51,6 @@ namespace GUI_BT_SE17
             Svgs = wrapper.GetSvgElements();
 
             Count = Svgs.Count;
-            BoundingBox = TransformedPathGenerator.CalculateBoundingRectangle(Svgs);
             Translate();
             //GenerateImage(path); // not working properly
         }
@@ -60,11 +58,15 @@ namespace GUI_BT_SE17
         private void Translate()
         {
             var updated = new List<SvgElement>();
+            var boundingBox = TransformedPathGenerator.CalculateBoundingRectangle(Svgs);
+
             foreach (var svg in Svgs)
             {
-                updated.Add(TransformedPathGenerator.TranslatePath(svg, -BoundingBox.minX, -BoundingBox.minY));
+                updated.Add(TransformedPathGenerator.TranslatePath(svg, -boundingBox.minX, -boundingBox.minY));
             }
             Svgs = updated;
+
+            BoundingBox = TransformedPathGenerator.CalculateBoundingRectangle(Svgs);
         }
 
 

@@ -21,7 +21,7 @@ namespace BT.ViewModel
         private ComboBox strokeComboBox;
         private ComboBox fillComboBox;
 
-        public ObservableCollection<TemplateItem> Templates
+        public ObservableCollection<TemplateItem> Annotations
         {
             get
             {
@@ -30,6 +30,14 @@ namespace BT.ViewModel
             set
             {
                 templates = value;
+            }
+        }
+
+        public TemplateItem SelectedAnnotation
+        {
+            get
+            {
+                return Annotations[AnnotationIndex];
             }
         }
 
@@ -68,8 +76,8 @@ namespace BT.ViewModel
             templateLoader = new TemplateLoader(templatePath);
             patterns = new TemplateLoader(patternPath);
 
-            Templates = templateLoader.GetItems();
-            Templates[0].PngPath = @"/../../Pictures/test.png";
+            Annotations = templateLoader.GetItems();
+            Annotations[0].PngPath = @"/../../Pictures/test.png";
         }
 
 

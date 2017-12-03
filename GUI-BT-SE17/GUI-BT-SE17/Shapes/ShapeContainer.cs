@@ -1,5 +1,7 @@
 ﻿using GUI_BT_SE17.Shapes;
+using GUI_BT_SE17.Shapes.Commands;
 using Svg.IO;
+using Svg.Path.Operations;
 using Svg.Wrapper;
 using System;
 using System.Collections.Generic;
@@ -10,21 +12,96 @@ using System.Windows.Shapes;
 
 namespace GUI_BT_SE17
 {
+    using SVG = TransformedPathGenerator;
     public static class ShapeContainer
     {
         private static List<SvgElement> svgs = new List<SvgElement>();
         private static List<Path> shapes = new List<Path>();
-        //private static List<SvgElement> selected = new List<SvgElement>();
         private static List<SvgCommand> newPath = new List<SvgCommand>();
         private static SvgCommandFactory factory = new SvgCommandFactory();
+        private static List<bool> wasSet;
         private static int shapeIndex = 0;
         private static int pathIndex = 0;
-
-        private static List<bool> wasSet;
+        private static int strokeWidth;
         private static Color fillColor;
         private static Color strokeColor;
 
-        private static int strokeWidth;
+        public static void UpdateEntry(SvgElement updated, Shape shape)
+        {
+            var i = shapes.IndexOf(shape as Path);
+
+            if (i > -1)
+            {
+                svgs[i] = updated;
+            }
+        }
+
+        public static void MirrorVertical (Shape shape, Canvas canvas)
+        {
+            var path = shape as Path;
+            var i = shapes.IndexOf(path);
+
+            if (i > -1)
+            {
+                canvas.Children.Remove(shape);
+
+                var svg = svgs[i];
+                var bounds = SVG.CalculateBoundingRectangle(svg);
+                var width = bounds.maxX - bounds.minX;
+                var height = bounds.maxY - bounds.minY;
+                var center = new Point(width / 2 + bounds.minX, height / 2 + bounds.minY);
+
+
+                shapes[i] = SimpleShapeCommand.MirrorVertical(svg, center, out var result) as Path;
+                shapes[i].MouseEnter += ShapeFunctionality.Hover;
+                shapes[i].MouseLeave += ShapeFunctionality.EndHover;
+                shapes[i].MouseLeftButtonDown += ShapeFunctionality.Click;
+                canvas.Children.Add(shapes[i]);
+                svgs[i] = result;
+            }
+        }
+
+        public static void MirrorHorizontal(Shape shape, Canvas canvas)
+        {
+            var path = shape as Path;
+            var i = shapes.IndexOf(path);
+
+            if (i > -1)
+            {
+                canvas.Children.Remove(shape);
+
+                var svg = svgs[i];
+                var bounds = SVG.CalculateBoundingRectangle(svg);
+                var width = bounds.maxX - bounds.minX;
+                var height = bounds.maxY - bounds.minY;
+                var center = new Point(width / 2 + bounds.minX, height / 2 + bounds.minY);
+
+
+                shapes[i] = SimpleShapeCommand.MirrorHorizontal(svg, center, out var result) as Path;
+                shapes[i].MouseEnter += ShapeFunctionality.Hover;
+                shapes[i].MouseLeave += ShapeFunctionality.EndHover;
+                shapes[i].MouseLeftButtonDown += ShapeFunctionality.Click;
+                canvas.Children.Add(shapes[i]);
+                svgs[i] = result;
+            }
+        }
+
+        public static void AddElements (List<Path> graphicObjects, List<SvgElement> svgObjects)
+        {
+            foreach (var graphic in graphicObjects)
+            {
+                shapes.Add(graphic);
+
+                shapes[shapeIndex].MouseEnter += ShapeFunctionality.Hover;
+                shapes[shapeIndex].MouseLeave += ShapeFunctionality.EndHover;
+                shapes[shapeIndex].MouseLeftButtonDown += ShapeFunctionality.Click;
+            }
+            foreach (var svg in svgObjects)
+            {
+                svgs.Add(svg);
+            }
+            shapeIndex++;
+        } 
 
         public static Path RemoveLastPoint()
         {
@@ -47,6 +124,11 @@ namespace GUI_BT_SE17
             foreach (var svg in svgs)
             {
                 shapes.Add(Helper.TransformSvgToXamlPath(svg));
+
+                shapes[shapeIndex].MouseEnter += ShapeFunctionality.Hover;
+                shapes[shapeIndex].MouseLeave += ShapeFunctionality.EndHover;
+                shapes[shapeIndex].MouseLeftButtonDown += ShapeFunctionality.Click;
+
                 canvas.Children.Add(shapes[shapeIndex]);
                 shapeIndex++;
             }
@@ -165,16 +247,10 @@ namespace GUI_BT_SE17
             {
                 svg.Attributes.Add("stroke-width", shapes[shapeIndex].StrokeThickness.ToString());
             }
-                
 
-            shapes[shapeIndex].MouseEnter += (sender, args) => {
-                Shape a = sender as Shape;
-                a.StrokeThickness *= 3;
-            };
-            shapes[shapeIndex].MouseLeave += (sender, args) => {
-                Shape a = sender as Shape;
-                a.StrokeThickness /= 3;
-            };
+            shapes[shapeIndex].MouseEnter += ShapeFunctionality.Hover;
+            shapes[shapeIndex].MouseLeave += ShapeFunctionality.EndHover;
+            shapes[shapeIndex].MouseLeftButtonDown += ShapeFunctionality.Click;
 
             newPath = new List<SvgCommand>();
 

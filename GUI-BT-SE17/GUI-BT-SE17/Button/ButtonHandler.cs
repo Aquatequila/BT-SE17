@@ -12,7 +12,7 @@ namespace GUI_BT_SE17
         {
             var saveFileDialog = new SaveFileDialog();
             
-            saveFileDialog.InitialDirectory = @"C:\";
+            saveFileDialog.InitialDirectory = @"C:\Users\ntecm\desktop\temp";
             saveFileDialog.RestoreDirectory = true;
 
             if (saveFileDialog.ShowDialog() == true)
@@ -28,11 +28,6 @@ namespace GUI_BT_SE17
                     png.Save(stm);
                 }
             }
-        }
-
-        public Canvas Refactor()
-        {
-            return null;
         }
     }
 }

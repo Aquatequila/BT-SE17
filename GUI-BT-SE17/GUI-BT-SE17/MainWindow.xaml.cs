@@ -1,6 +1,8 @@
 ﻿using BT.ViewModel;
 using GUI_BT_SE17.Enums;
+using GUI_BT_SE17.Shapes.Commands;
 using Microsoft.Win32;
+using Svg.Path.Operations;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +20,11 @@ namespace GUI_BT_SE17
         private static ViewModel viewModel;
         private ButtonHandler buttonHandler = new ButtonHandler();
         private static CanvasLogic canvasLogic;
+
+        public static ViewModel GetViewModel ()
+        {
+            return viewModel;
+        }
 
         #region general
 
@@ -57,11 +64,41 @@ namespace GUI_BT_SE17
 
             switch (e.Key)
             {
-                case Key.P: viewModel.SelectedMenuItem = Operation.Path;      break;
-                case Key.L:         break;
-                case Key.Z:        CreateShapeLogic.EndPath(viewModel, true); break;
-                case Key.M: viewModel.SelectedShape = null; viewModel.SelectedMenuItem = Operation.None; break; 
-                case Key.Escape: viewModel.SelectedShape = null; viewModel.SelectedMenuItem = Operation.None; break;
+                case Key.P:
+                    {
+                        viewModel.SelectedMenuItem = Operation.Path;
+                        break;
+                    }
+                case Key.Z:
+                    {
+                        CreateShapeLogic.EndPath(viewModel, true);
+                        break;
+                    }
+                case Key.M:
+                    {
+                        viewModel.SelectedShape = null;
+                        viewModel.SelectedMenuItem = Operation.None;
+                        break;
+                    }
+                case Key.V:
+                    {
+                        ShapeContainer.MirrorVertical(viewModel.SelectedShape, viewModel.Canvas);
+                        viewModel.SelectedShape = null;
+                        viewModel.SelectedMenuItem = Operation.None;
+                        break;
+                    }
+                case Key.H:
+                    {
+                        ShapeContainer.MirrorHorizontal(viewModel.SelectedShape, viewModel.Canvas);
+                        viewModel.SelectedShape = null;
+                        viewModel.SelectedMenuItem = Operation.None;
+                        break;
+                    }
+                case Key.A:
+                    {
+                        viewModel.SelectedMenuItem = Operation.Annotation;
+                        break;
+                    }
                 default:
                     Console.WriteLine("no valid key pressed");
                     break;
@@ -72,7 +109,7 @@ namespace GUI_BT_SE17
         private void SaveFileButton_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //saveFileDialog.InitialDirectory = @"c:\";
+            saveFileDialog.InitialDirectory = @"C:\Users\ntecm\desktop\temp";
             if (saveFileDialog.ShowDialog() == true)
             {
                 ShapeContainer.WriteToFile(saveFileDialog.FileName + ".svg");
@@ -82,6 +119,7 @@ namespace GUI_BT_SE17
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = @"C:\Users\ntecm\desktop\temp";
             if (openFileDialog.ShowDialog() == true)
             {
                 ShapeContainer.LoadFromFile(openFileDialog.FileName, viewModel.Canvas);   
@@ -93,7 +131,6 @@ namespace GUI_BT_SE17
             buttonHandler.ToPng(viewModel.Canvas, (int)this.Width, (int)this.Height);
             e.Handled = true;
         }
-#endregion
 
         private void Increment_Click(object sender, RoutedEventArgs e)
         {
@@ -104,5 +141,8 @@ namespace GUI_BT_SE17
         {
             viewModel.Pixel--;
         }
+        #endregion
+
+
     }
 }

@@ -12,6 +12,11 @@ namespace GUI_BT_SE17.Enums
         Translate,
         Rotate,
         Abort,
+        Template,
+        Annotation,
+        Edit,
+        MirrorVertical,
+        MirrorHorizontal,
         None
     }
 }

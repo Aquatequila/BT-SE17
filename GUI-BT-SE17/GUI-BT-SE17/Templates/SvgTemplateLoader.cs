@@ -29,17 +29,5 @@ namespace GUI_BT_SE17
             }
             return result;
         }
-
-
-        //public void GenerateImageOfItems()
-        //{
-        //    var files = Directory.GetFiles(directory);
-
-        //    foreach (var file in files)
-        //    {
-        //        new TemplateItem(file);
-        //    }
-        //}
-
     }
 }

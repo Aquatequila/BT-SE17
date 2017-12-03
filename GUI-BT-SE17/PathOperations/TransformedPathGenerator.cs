@@ -1,6 +1,7 @@
 ﻿using Svg.Wrapper;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace Svg.Path.Operations
 {
@@ -139,6 +140,30 @@ namespace Svg.Path.Operations
             return point;
         }
 
+        private static SvgCommand DenormalizePoint(SvgCommand point, Point position)
+        {
+            point.x = point.x + position.X;
+            point.y = point.y + position.Y;
+            point.x1 = point.x1 + position.X;
+            point.y1 = point.y1 + position.Y;
+            point.rx = point.rx + position.X;
+            point.ry = point.ry + position.Y;
+
+            return point;
+        }
+
+        private static SvgCommand NormalizePoint(SvgCommand point, Point position)
+        {
+            point.x = point.x - position.X;
+            point.y = point.y - position.Y;
+            point.x1 = point.x1 - position.X;
+            point.y1 = point.y1 - position.Y;
+            point.rx = point.rx - position.X;
+            point.ry = point.ry - position.Y;
+
+            return point;
+        }
+
         private static SvgCommand RotatePointToDegrees(SvgCommand point, double degrees, SvgCommand center)
         {
             degrees = degrees * Math.PI / 180;
@@ -183,20 +208,114 @@ namespace Svg.Path.Operations
 
             return point;
         }
+
+        private static SvgCommand InvertXSign(SvgCommand point)
+        {
+            point.x = - point.x;
+            point.rx = -point.rx;
+            point.x1 = -point.x1;
+
+            return point;
+        }
+
+        private static SvgCommand InvertYSign(SvgCommand point)
+        {
+            point.y = -point.y;
+            point.ry = -point.ry;
+            point.y1 = -point.y1;
+
+            return point;
+        }
+
+        public static List<SvgElement> MirrorHorizontalRelative(List<SvgElement> svgs, Point mirrorPoint)
+        {
+            var returnValue = new List<SvgElement>();
+
+            foreach (var svg in svgs)
+            {
+                returnValue.Add(MirrorSvgHorizontal(svg, mirrorPoint));
+            }
+            return returnValue;
+        }
+
+        private static SvgElement MirrorSvgHorizontal(SvgElement svg, Point mirrorPoint)
+        {
+            SvgElement returnValue = new SvgElement(svg);
+
+            for (var i = 0; i < returnValue.Path.Count; i++)
+            {
+                returnValue.Path[i] = NormalizePoint(returnValue.Path[i], mirrorPoint);
+                returnValue.Path[i] = InvertYSign(returnValue.Path[i]);
+                returnValue.Path[i] = DenormalizePoint(returnValue.Path[i], mirrorPoint);
+            }
+            return returnValue;
+        }
+
+        public static List<SvgElement> MirrorVerticalRelative (List<SvgElement> svgs, Point mirrorPoint)
+        {
+            var returnValue = new List<SvgElement>();
+
+            foreach (var svg in svgs)
+            {
+                returnValue.Add(MirrorSvgVertical(svg, mirrorPoint));
+            }
+            return returnValue;
+        }
+
+        private static SvgElement MirrorSvgVertical(SvgElement svg, Point mirrorPoint)
+        {
+            SvgElement returnValue = new SvgElement(svg);
+
+            for (var i = 0; i < returnValue.Path.Count; i++)
+            {
+                returnValue.Path[i] = NormalizePoint(returnValue.Path[i], mirrorPoint);
+                returnValue.Path[i] = InvertXSign(returnValue.Path[i]);
+                returnValue.Path[i] = DenormalizePoint(returnValue.Path[i], mirrorPoint);
+            }
+            return returnValue;
+        }
+
+        public static List<SvgElement> ScaleRelativeBy(List<SvgElement> svgs, double xFactor, double yFactor, Point position)
+        {
+            var returnValue = new List<SvgElement>();
+
+            foreach (var svg in svgs)
+            {
+                returnValue.Add(ScalePathRelative(svg, xFactor, yFactor, position));
+            }
+            return returnValue;
+        }
+
+        private static SvgElement ScalePathRelative(SvgElement svg, double xFactor, double yFactor, Point position)
+        {
+            SvgElement returnValue = new SvgElement(svg);
+
+            for (var i = 0; i < returnValue.Path.Count; i++)
+            {
+                var point = NormalizePoint(returnValue.Path[i], position);
+                returnValue.Path[i] = DenormalizePoint(ScalePoint(point, xFactor, yFactor), position);
+            }
+            return returnValue;
+        }
+
+        
+
         public static SvgElement ScalePath(SvgElement svg, double xFactor, double yFactor)
         {
-            SvgElement returnValue = svg;
-            for (var i = 0; i < returnValue.Path.Count; i++)
+            SvgElement returnValue = new SvgElement(svg);
+
+            for (var i = 1; i < returnValue.Path.Count; i++)
             {
                 returnValue.Path[i] = ScalePoint(returnValue.Path[i], xFactor, yFactor);
             }
             return returnValue;
         }
-        // ref problem => scale not visible to outside
+
+
         public static SvgElement ScalePath(SvgElement svg, double amount)
         {
-            SvgElement returnValue = svg;
-            for (var i = 0; i < returnValue.Path.Count; i++)
+            SvgElement returnValue = new SvgElement(svg);
+            for (var i = 1; i < returnValue.Path.Count; i++)
             {
                 returnValue.Path[i] = ScalePoint(returnValue.Path[i], amount);
             }
@@ -241,7 +360,7 @@ namespace Svg.Path.Operations
 
         public static SvgElement TranslatePath(SvgElement svg, double deltaX, double deltaY)
         {
-            var returnValue = svg;
+            var returnValue = new SvgElement(svg);
             for (var i = 0; i < returnValue.Path.Count; i++)
             {
                 returnValue.Path[i] = TranslatePoint(returnValue.Path[i], deltaX, deltaY);

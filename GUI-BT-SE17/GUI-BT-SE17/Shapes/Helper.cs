@@ -14,6 +14,10 @@ namespace GUI_BT_SE17.Shapes
     {
         public static Path TransformSvgToXamlPath(SvgElement svg)
         {
+            if (svg == null)
+            {
+                return null;
+            }
             var path = new Path();
 
             if (svg.Attributes.TryGetValue("stroke", out var stroke))
@@ -24,9 +28,12 @@ namespace GUI_BT_SE17.Shapes
             }
             if (svg.Attributes.TryGetValue("fill", out var fill))
             {
-                string xamlColor = fill.Insert(1, "FF");
-                path.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(xamlColor));
-                Console.WriteLine(xamlColor);
+                if (!fill.Equals("none"))
+                {
+                    string xamlColor = fill.Insert(1, "FF");
+                    path.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(xamlColor));
+                    Console.WriteLine(xamlColor);
+                }
             }
             if (svg.Attributes.TryGetValue("stroke-width", out var px))
             {

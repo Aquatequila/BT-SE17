@@ -18,8 +18,6 @@ namespace GUI_BT_SE17
 
             ShapeContainer.SetStrokeColor(model.StrokeColor);
             ShapeContainer.SetStrokeWidth(model.Pixel);
-            //ShapeContainer.SetFillColor(model.FillColor);
-
             model.Canvas.Children.Add(model.SelectedShape);
         }
 
