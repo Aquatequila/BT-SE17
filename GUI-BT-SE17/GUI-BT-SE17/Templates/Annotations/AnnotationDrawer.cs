@@ -81,7 +81,6 @@ namespace GUI_BT_SE17.Shapes
         {
             GetAspectRatio(mouseClick, out var xRatio, out var yRatio);
 
-            //svgs = Svgs;
             svgs = TransformedPathGenerator.ScaleRelativeBy(Svgs, xRatio, yRatio, origin);
 
             if (mouseClick.X < origin.X)

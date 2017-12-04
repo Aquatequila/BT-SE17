@@ -1,6 +1,7 @@
 ﻿using BT.ViewModel;
 using GUI_BT_SE17.Enums;
 using GUI_BT_SE17.Shapes;
+using GUI_BT_SE17.ViewModels;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,8 @@ namespace GUI_BT_SE17
 {
     internal class CanvasLogic
     {
+        private DrawingModel drawModel = DrawingModel.GetInstance();
+
         public ViewModel ViewModel
         {
             get;
@@ -43,7 +46,7 @@ namespace GUI_BT_SE17
         {
             if (ViewModel.SelectedShape != null)
             {
-                CreateShapeLogic.EndPath(ViewModel);
+                CreateShapeLogic.EndPath();
             }
         }
 
@@ -57,7 +60,7 @@ namespace GUI_BT_SE17
                 case Operation.Path:
                     {
                         if (ViewModel.SelectedShape == null) CreateShapeLogic.StartShape(position, ViewModel);
-                        else CreateShapeLogic.SetPathPoint(position, ViewModel);
+                        else CreateShapeLogic.SetPathPoint(position);
                         break;
                     }
                 case Operation.Annotation:
@@ -70,7 +73,7 @@ namespace GUI_BT_SE17
                     {
                         if (ViewModel.SelectedShape != null)
                         {
-                            moveCommand = new ShapeMoveCommand(ShapeContainer.GetSvgForShape(ViewModel.SelectedShape), position);
+                            moveCommand = new ShapeMoveCommand(drawModel.SvgForShape(ViewModel.SelectedShape), position);
                         }
                         break;
                     }
@@ -88,7 +91,7 @@ namespace GUI_BT_SE17
                 {
                     case Operation.Path:
                         {
-                            CreateShapeLogic.UpdatePath(position, ViewModel);
+                            CreateShapeLogic.UpdatePath(position);
                             break;
                         }
                     case Operation.None:
@@ -116,7 +119,7 @@ namespace GUI_BT_SE17
                         {
                             if (ViewModel.SelectedShape != null && moveCommand != null)
                             {
-                                ShapeContainer.ReplaceShape(ViewModel.SelectedShape, moveCommand.MoveTo(position, out var svg), ViewModel, svg);
+                                drawModel.UpdateSelected(moveCommand.MoveTo(position, out var svg), svg);
                             }
                             break;
                         }
@@ -133,8 +136,8 @@ namespace GUI_BT_SE17
             {
                 if (ViewModel.SelectedShape != null && moveCommand != null)
                 {
-                    ShapeContainer.ReplaceShape(ViewModel.SelectedShape, moveCommand.MoveTo(position, out var svg), ViewModel, svg);
-                    ViewModel.SelectedShape = null;
+                    drawModel.UpdateSelected(moveCommand.MoveTo(position, out var svg), svg);
+                    drawModel.Selected = null;
                     ViewModel.SelectedMenuItem = Operation.None;
                     moveCommand = null;
                 }
@@ -154,7 +157,7 @@ namespace GUI_BT_SE17
                         ViewModel.Canvas.Children.Add(shape);
                     }
 
-                    ShapeContainer.AddElements(annotatioShapes, svgs);
+                    drawModel.AddElements(annotatioShapes, svgs);
 
                     anno = null;
                     annotatioShapes = null;

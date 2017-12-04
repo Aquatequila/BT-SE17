@@ -56,6 +56,7 @@
     </ApplicationDefinition>
     <Compile Include="Enums\Operation.cs" />
     <Compile Include="Shapes\Commands\SimpleShapeCommand.cs" />
+    <Compile Include="Shapes\PathBuilder.cs" />
     <Compile Include="Shapes\ShapeFunctionality.cs" />
     <Compile Include="Shapes\Commands\ShapeMoveCommand.cs" />
     <Compile Include="Templates\Annotations\AnnotationDrawer.cs" />
@@ -63,7 +64,6 @@
     <Compile Include="Button\ButtonHandler.cs" />
     <Compile Include="Canvas\CanvasLogic.cs" />
     <Compile Include="Functionality\CreateShapeLogic.cs" />
-    <Compile Include="Shapes\ShapeContainer.cs" />
     <Compile Include="Templates\SvgTemplateLoader.cs" />
     <Compile Include="Templates\TemplateItem.cs" />
     <Compile Include="ViewModels\DrawingModel.cs" />

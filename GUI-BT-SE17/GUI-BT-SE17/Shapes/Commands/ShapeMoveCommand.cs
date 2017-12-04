@@ -14,7 +14,7 @@ namespace GUI_BT_SE17.Shapes
     internal sealed class ShapeMoveCommand
     {
         private ViewModel model = MainWindow.GetViewModel();
-        private Shape shape;
+        private Path shape;
 
         private Point origin;
         private SvgElement source;
@@ -26,7 +26,7 @@ namespace GUI_BT_SE17.Shapes
             this.source = new SvgElement(source);
         }
 
-        public Shape MoveTo(Point destination)
+        public Path MoveTo(Point destination)
         {
             var deltaX = destination.X - origin.X;
             var deltaY = destination.Y - origin.Y;
@@ -35,7 +35,7 @@ namespace GUI_BT_SE17.Shapes
             return Helper.TransformSvgToXamlPath(result);
         }
 
-        public Shape MoveTo(Point destination, out SvgElement svg)
+        public Path MoveTo(Point destination, out SvgElement svg)
         {
             var deltaX = destination.X - origin.X;
             var deltaY = destination.Y - origin.Y;

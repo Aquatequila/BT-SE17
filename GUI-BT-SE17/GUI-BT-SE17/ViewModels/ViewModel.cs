@@ -1,5 +1,6 @@
 ﻿using GUI_BT_SE17;
 using GUI_BT_SE17.Enums;
+using GUI_BT_SE17.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,12 +27,15 @@ namespace BT.ViewModel
             return self;
         }
 
+        private static DrawingModel drawingModel;
         public static ViewModel GetInstance(CheckBox stroke, CheckBox fill, ComboBox colorStroke, ComboBox colorFill, Canvas canvas)
         {
             if (self == null)
             {
                 self = new ViewModel(stroke, fill, colorStroke, colorFill, canvas);
             }
+            drawingModel = DrawingModel.GetInstance();
+            drawingModel.SetViewModel();
 
             return self;
         }
@@ -101,8 +105,8 @@ namespace BT.ViewModel
         }
 
 
-        private Shape selectedShape;
-        public Shape SelectedShape
+        private Path selectedShape;
+        public Path SelectedShape
         {
             get { return selectedShape; }
             set { selectedShape = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedShape))); }
@@ -182,6 +186,8 @@ namespace BT.ViewModel
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedFillColorIndex)));
 
                     FillEnabled = true;
+
+
                 }
             }
         }

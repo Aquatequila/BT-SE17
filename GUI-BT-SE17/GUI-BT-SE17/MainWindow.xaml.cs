@@ -1,6 +1,7 @@
 ﻿using BT.ViewModel;
 using GUI_BT_SE17.Enums;
 using GUI_BT_SE17.Shapes.Commands;
+using GUI_BT_SE17.ViewModels;
 using Microsoft.Win32;
 using Svg.Path.Operations;
 using System;
@@ -57,7 +58,9 @@ namespace GUI_BT_SE17
         }
 
         #endregion
-   
+
+        private DrawingModel drawModel = DrawingModel.GetInstance();
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             viewModel.PressedKey = e.Key;
@@ -71,7 +74,7 @@ namespace GUI_BT_SE17
                     }
                 case Key.Z:
                     {
-                        CreateShapeLogic.EndPath(viewModel, true);
+                        CreateShapeLogic.EndPath(true);
                         break;
                     }
                 case Key.M:
@@ -81,10 +84,10 @@ namespace GUI_BT_SE17
                     }
                 case Key.V:
                     {
-                        if (viewModel.SelectedShape != null)
+                        if (drawModel.Selected != null)
                         {
-                            ShapeContainer.MirrorVertical(viewModel.SelectedShape, viewModel.Canvas);
-                            viewModel.SelectedShape = null;
+                            drawModel.MirrorSelectedVertical();
+                            drawModel.Selected = null;
                             viewModel.SelectedMenuItem = Operation.None;
                         }
                         break;
@@ -93,8 +96,8 @@ namespace GUI_BT_SE17
                     {
                         if (viewModel.SelectedShape != null)
                         {
-                            ShapeContainer.MirrorHorizontal(viewModel.SelectedShape, viewModel.Canvas);
-                            viewModel.SelectedShape = null;
+                            drawModel.MirrorSelectedHorizontal();
+                            drawModel.Selected = null;
                             viewModel.SelectedMenuItem = Operation.None;
                         }
                         break;
@@ -117,7 +120,7 @@ namespace GUI_BT_SE17
             saveFileDialog.InitialDirectory = @"C:\Users\ntecm\desktop\temp";
             if (saveFileDialog.ShowDialog() == true)
             {
-                ShapeContainer.WriteToFile(saveFileDialog.FileName + ".svg");
+                drawModel.WriteToFile(saveFileDialog.FileName + ".svg");
             }
         }
 
@@ -127,7 +130,7 @@ namespace GUI_BT_SE17
             openFileDialog.InitialDirectory = @"C:\Users\ntecm\desktop\temp";
             if (openFileDialog.ShowDialog() == true)
             {
-                ShapeContainer.LoadFromFile(openFileDialog.FileName, viewModel.Canvas);   
+                drawModel.LoadFromFile(openFileDialog.FileName);   
             }
         }
 
