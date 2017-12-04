@@ -76,22 +76,27 @@ namespace GUI_BT_SE17
                     }
                 case Key.M:
                     {
-                        viewModel.SelectedShape = null;
-                        viewModel.SelectedMenuItem = Operation.None;
+                        viewModel.SelectedMenuItem = Operation.Move;
                         break;
                     }
                 case Key.V:
                     {
-                        ShapeContainer.MirrorVertical(viewModel.SelectedShape, viewModel.Canvas);
-                        viewModel.SelectedShape = null;
-                        viewModel.SelectedMenuItem = Operation.None;
+                        if (viewModel.SelectedShape != null)
+                        {
+                            ShapeContainer.MirrorVertical(viewModel.SelectedShape, viewModel.Canvas);
+                            viewModel.SelectedShape = null;
+                            viewModel.SelectedMenuItem = Operation.None;
+                        }
                         break;
                     }
                 case Key.H:
                     {
-                        ShapeContainer.MirrorHorizontal(viewModel.SelectedShape, viewModel.Canvas);
-                        viewModel.SelectedShape = null;
-                        viewModel.SelectedMenuItem = Operation.None;
+                        if (viewModel.SelectedShape != null)
+                        {
+                            ShapeContainer.MirrorHorizontal(viewModel.SelectedShape, viewModel.Canvas);
+                            viewModel.SelectedShape = null;
+                            viewModel.SelectedMenuItem = Operation.None;
+                        }
                         break;
                     }
                 case Key.A:

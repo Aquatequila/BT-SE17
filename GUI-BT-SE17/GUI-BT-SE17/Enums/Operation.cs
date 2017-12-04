@@ -9,7 +9,7 @@ namespace GUI_BT_SE17.Enums
     public enum Operation
     {
         Path,
-        Translate,
+        Move,
         Rotate,
         Abort,
         Template,

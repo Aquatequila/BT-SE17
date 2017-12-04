@@ -66,6 +66,7 @@
     <Compile Include="Shapes\ShapeContainer.cs" />
     <Compile Include="Templates\SvgTemplateLoader.cs" />
     <Compile Include="Templates\TemplateItem.cs" />
+    <Compile Include="ViewModels\DrawingModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Templates\Replacements\TemplateWrapper.cs" />
     <Page Include="MainWindow.xaml">

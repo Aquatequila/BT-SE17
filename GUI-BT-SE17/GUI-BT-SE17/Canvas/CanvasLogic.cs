@@ -19,7 +19,7 @@ namespace GUI_BT_SE17
 
         public CanvasLogic(CheckBox stroke, CheckBox fill, ComboBox colorStroke, ComboBox colorFill)
         {
-            ViewModel = new ViewModel(stroke,fill,colorStroke,colorFill, InitCanvas());
+            ViewModel = ViewModel.GetInstance(stroke,fill,colorStroke,colorFill, InitCanvas());
         }
 
         public Canvas InitCanvas()
@@ -47,6 +47,7 @@ namespace GUI_BT_SE17
             }
         }
 
+        private ShapeMoveCommand moveCommand;
         private void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point position = e.GetPosition(ViewModel.Canvas);
@@ -63,6 +64,14 @@ namespace GUI_BT_SE17
                     {
                         anno = new AnnotationDrawer(ViewModel.SelectedAnnotation);
                         anno.Start(position);
+                        break;
+                    }
+                case Operation.Move:
+                    {
+                        if (ViewModel.SelectedShape != null)
+                        {
+                            moveCommand = new ShapeMoveCommand(ShapeContainer.GetSvgForShape(ViewModel.SelectedShape), position);
+                        }
                         break;
                     }
                 default: break;
@@ -103,6 +112,14 @@ namespace GUI_BT_SE17
                             }
                             break;
                         }
+                    case Operation.Move:
+                        {
+                            if (ViewModel.SelectedShape != null && moveCommand != null)
+                            {
+                                ShapeContainer.ReplaceShape(ViewModel.SelectedShape, moveCommand.MoveTo(position, out var svg), ViewModel, svg);
+                            }
+                            break;
+                        }
                     default: break;
                 }
             }
@@ -112,7 +129,17 @@ namespace GUI_BT_SE17
         {
             Point position = e.GetPosition(ViewModel.Canvas);
 
-            if (ViewModel.SelectedMenuItem == Operation.Annotation)
+            if (ViewModel.SelectedMenuItem == Operation.Move)
+            {
+                if (ViewModel.SelectedShape != null && moveCommand != null)
+                {
+                    ShapeContainer.ReplaceShape(ViewModel.SelectedShape, moveCommand.MoveTo(position, out var svg), ViewModel, svg);
+                    ViewModel.SelectedShape = null;
+                    ViewModel.SelectedMenuItem = Operation.None;
+                    moveCommand = null;
+                }
+            }
+            else if (ViewModel.SelectedMenuItem == Operation.Annotation)
             {
                 if (anno != null && anno.Updateable)
                 {

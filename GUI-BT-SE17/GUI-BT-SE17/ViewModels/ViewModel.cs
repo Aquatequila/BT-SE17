@@ -16,6 +16,26 @@ namespace BT.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+
+        private static ViewModel self;
+        public static ViewModel GetViewModel()
+        {
+            if (self == null)
+                throw new NullReferenceException("ViewModel : GetViewModel() not callable when GetInstance() was not called before");
+
+            return self;
+        }
+
+        public static ViewModel GetInstance(CheckBox stroke, CheckBox fill, ComboBox colorStroke, ComboBox colorFill, Canvas canvas)
+        {
+            if (self == null)
+            {
+                self = new ViewModel(stroke, fill, colorStroke, colorFill, canvas);
+            }
+
+            return self;
+        }
+
         private CheckBox strokeBox;
         private CheckBox fillBox;
         private ComboBox strokeComboBox;
@@ -65,7 +85,7 @@ namespace BT.ViewModel
         private TemplateLoader patterns;
         private TemplateLoader templateLoader;
 
-        public ViewModel(CheckBox stroke, CheckBox fill, ComboBox colorStroke, ComboBox colorFill, Canvas canvas)
+        private ViewModel(CheckBox stroke, CheckBox fill, ComboBox colorStroke, ComboBox colorFill, Canvas canvas)
         {
             strokeBox = stroke;
             fillBox = fill;
