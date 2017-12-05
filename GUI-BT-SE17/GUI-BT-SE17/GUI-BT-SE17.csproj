@@ -64,6 +64,7 @@
     <Compile Include="Button\ButtonHandler.cs" />
     <Compile Include="Canvas\CanvasLogic.cs" />
     <Compile Include="Functionality\CreateShapeLogic.cs" />
+    <Compile Include="Templates\Annotations\AnnotationHandler.cs" />
     <Compile Include="Templates\SvgTemplateLoader.cs" />
     <Compile Include="Templates\TemplateItem.cs" />
     <Compile Include="ViewModels\DrawingModel.cs" />

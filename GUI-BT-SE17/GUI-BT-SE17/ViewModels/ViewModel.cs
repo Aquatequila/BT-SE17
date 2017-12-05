@@ -121,10 +121,6 @@ namespace BT.ViewModel
                 if (value > 0)
                 {
                     pixel = value;
-
-                    if (selectedShape != null)
-                        SelectedShape.StrokeThickness = pixel;
-
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Pixel)));
                 }
             }
@@ -140,14 +136,6 @@ namespace BT.ViewModel
                 {
                     fillEnabled = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillEnabled)));
-
-                    if (selectedShape != null)
-                    {
-                        if (fillEnabled == true)
-                            selectedShape.Fill = new SolidColorBrush(FillColor);
-                        else
-                            selectedShape.Fill = null;
-                    }
                 }
             }
         }
@@ -162,19 +150,11 @@ namespace BT.ViewModel
                 {
                     strokeEnabled = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StrokeEnabled)));
-
-                    if (selectedShape != null)
-                    {
-                        if (strokeEnabled == true)
-                            selectedShape.Stroke = new SolidColorBrush(StrokeColor);
-                        else
-                            selectedShape.Stroke = null;
-                    }
                 }
             }
         }
 
-        private int selectedFillColorIndex = 4;
+        private int selectedFillColorIndex = 0;
         public int SelectedFillColorIndex
         {
             get { return selectedFillColorIndex; }
@@ -186,8 +166,6 @@ namespace BT.ViewModel
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedFillColorIndex)));
 
                     FillEnabled = true;
-
-
                 }
             }
         }

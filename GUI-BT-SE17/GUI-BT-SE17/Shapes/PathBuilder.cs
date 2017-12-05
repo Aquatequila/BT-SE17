@@ -12,9 +12,11 @@ namespace GUI_BT_SE17
         private static List<SvgCommand> path = new List<SvgCommand>();
         private static SvgCommandFactory factory = new SvgCommandFactory();
 
-        private static void Clear(this List<SvgCommand> self)
+        private static int stage = 0;
+
+        private static void Init(this List<SvgCommand> self)
         {
-            self = null;
+            stage = 0;
             self = new List<SvgCommand>();
         }
 
@@ -36,6 +38,8 @@ namespace GUI_BT_SE17
 
         public static void StartPath(Point mouseclick)
         {
+            stage++;
+
             path.Clear();
             path.AddMoveCommand(mouseclick);
 
@@ -44,7 +48,8 @@ namespace GUI_BT_SE17
 
         private static void AddLineCommand(this List<SvgCommand> self, Point mouseclick)
         {
-            self.Add(factory.LCmd(mouseclick.X, mouseclick.Y));
+            if (stage > 0) 
+                self.Add(factory.LCmd(mouseclick.X, mouseclick.Y));
         }
 
         public static void SetPathPoint (Point mouseclick)
@@ -54,8 +59,11 @@ namespace GUI_BT_SE17
 
         private static void UpdatePath(this List<SvgCommand> self, Point mouseclick)
         {
-            self.AddLineCommand(mouseclick);
-            drawModel.AddLineToPath(path.XamlPath());
+            if (stage > 0)
+            {
+                self.AddLineCommand(mouseclick);
+                drawModel.AddLineToPath(path.XamlPath());
+            }
         }
 
         private static SvgCommand Last (this List<SvgCommand> self)
@@ -76,12 +84,15 @@ namespace GUI_BT_SE17
 
         public static void UpdatePath(Point mouseclick)
         {
-            if (path.Last().type != PointType.M)
+            if (stage > 0)
             {
-                path.RemoveLast();
-            }
+                if (path.Last().type != PointType.M)
+                {
+                    path.RemoveLast();
+                }
 
-            path.UpdatePath(mouseclick);
+                path.UpdatePath(mouseclick);
+            }
         }
         private static void Close(this List<SvgCommand> self)
         {
@@ -90,16 +101,17 @@ namespace GUI_BT_SE17
 
         public static void EndPath (bool close)
         {
-            if (close)
+            if (stage > 0)
             {
-                path.RemoveLast();
-                path.Close();
+                if (close)
+                {
+                    path.RemoveLast();
+                    path.Close();
+                }
+
+                drawModel.EndPath(path.XamlPath(), path);
+                path.Init();
             }
-
-            drawModel.EndPath(path.XamlPath(), path);
-
-
-            path.Clear();
         }
     }
 }

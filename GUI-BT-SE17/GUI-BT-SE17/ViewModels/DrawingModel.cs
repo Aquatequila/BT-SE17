@@ -7,11 +7,7 @@ using Svg.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -39,6 +35,53 @@ namespace GUI_BT_SE17.ViewModels
         public void SetViewModel()
         {
             model = ViewModel.GetViewModel();
+            model.PropertyChanged += ViewModelChanged;
+        }
+
+        private void ViewModelChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof (model.SelectedFillColorIndex):
+                    {
+                        SetFillColor();
+                        break;
+                    }
+                case nameof(model.SelectedStrokeColorIndex):
+                    {
+                        SetStrokeColor();
+                        break;
+                    }
+                case nameof(model.StrokeEnabled):
+                    {
+                        if (model.StrokeEnabled == true)
+                        {
+                            SetStrokeColor();
+                        }
+                        else
+                        {
+                            RemoveStrokeColor();
+                        }
+                        break;
+                    }
+                case nameof(model.FillEnabled):
+                    {
+                        if (model.FillEnabled == true)
+                        {
+                            SetFillColor();
+                        }
+                        else
+                        {
+                            RemoveFillColor();
+                        }
+                        break;
+                    }
+                case nameof(model.Pixel):
+                    {
+                        SetStrokeWidth();
+                        break;
+                    }
+            }
         }
 
         public void LoadFromFile(string path)
@@ -89,6 +132,10 @@ namespace GUI_BT_SE17.ViewModels
             (model.Canvas.Children[i] as Path).Data = Geometry.Parse(data);
             AddEventsFor(i);
             Svgs[i].Path = AquireCopy(svgCommands);
+            if (!Svgs[i].Attributes.ContainsKey("fill"))
+            {
+                Svgs[i].SetAttribute("fill", "none");
+            } 
         }
 
         public void WriteToFile(string path)
@@ -98,7 +145,7 @@ namespace GUI_BT_SE17.ViewModels
 
             for (var i = 0; i < Svgs.Count; i++)
             {
-                wrapper.SetChild($"element {i++}", Svgs[i]);
+                wrapper.SetChild($"element {i}", Svgs[i++]);
             }
             writer.WriteToFile(path, wrapper);
         }
@@ -118,7 +165,7 @@ namespace GUI_BT_SE17.ViewModels
 
             (model.Canvas.Children[i] as Path).Data = SimpleShapeCommand.MirrorVertical(svg, center, out var result).Data;
             AddEventsFor(i);
-            Svgs[i] = result;
+            Svgs[i].Path = AquireCopy(result.Path);
         }
 
         public void MirrorSelectedHorizontal()
@@ -136,7 +183,7 @@ namespace GUI_BT_SE17.ViewModels
 
             (model.Canvas.Children[i] as Path).Data = SimpleShapeCommand.MirrorHorizontal(svg, center, out var result).Data;
             AddEventsFor(i);
-            Svgs[i] = result;
+            Svgs[i].Path = AquireCopy(result.Path);
         }
 
 
@@ -155,14 +202,26 @@ namespace GUI_BT_SE17.ViewModels
             return (model.Canvas.Children[index] as Path).StrokeThickness;
         }
 
+        public void RemoveFillColor ()
+        {
+            if (Selected != null)
+            {
+                var i = GetIndexOf(Selected);
+
+                (model.Canvas.Children[i] as Path).Fill = null;
+                Svgs[i].SetAttribute("fill", "none");
+            }
+        }
+
         public void SetFillColor()
         {
-            if (Selected == null)
-                throw new ArgumentNullException("DrawingModel: Selected is null in SetFill(color)");
-            var i = GetIndexOf(Selected);
+            if (Selected != null)
+            {
+                var i = GetIndexOf(Selected);
 
-            (model.Canvas.Children[i] as Path).Fill = new SolidColorBrush(model.FillColor);
-            Svgs[i].SetAttribute("fill", GetSvgFillColorStringFor(i));
+                (model.Canvas.Children[i] as Path).Fill = new SolidColorBrush(model.FillColor);
+                Svgs[i].SetAttribute("fill", GetSvgFillColorStringFor(i));
+            }
         }
 
         internal void UpdateSelected(Path newPath, SvgElement newSvg)
@@ -170,27 +229,40 @@ namespace GUI_BT_SE17.ViewModels
             var i = SelectedIndex;
 
             (model.Canvas.Children[i] as Path).Data = newPath.Data;
-            Svgs[i].Path = newSvg.Path;
+            Svgs[i].Path = AquireCopy(newSvg.Path);
+        }
+
+        public void RemoveStrokeColor()
+        {
+            if (Selected != null)
+            {
+                var i = GetIndexOf(Selected);
+
+                (model.Canvas.Children[i] as Path).Stroke = null;
+                Svgs[i].SetAttribute("stroke", "none");
+            }
         }
 
         public void SetStrokeColor()
         {
-            if (Selected == null)
-                throw new ArgumentNullException("DrawingModel: Selected is null in SetStrokeColor(color)");
-            var i = GetIndexOf(Selected);
+            if (Selected != null)
+            {
+                var i = GetIndexOf(Selected);
 
-            (model.Canvas.Children[i] as Path).Stroke = new SolidColorBrush(model.StrokeColor);
-            Svgs[i].SetAttribute("stroke", GetSvgStrokeColorStringFor(i));
+                (model.Canvas.Children[i] as Path).Stroke = new SolidColorBrush(model.StrokeColor);
+                Svgs[i].SetAttribute("stroke", GetSvgStrokeColorStringFor(i));
+            }
         }
 
         public void SetStrokeWidth ()
         {
-            if (Selected == null)
-                throw new ArgumentNullException("DrawingModel: Selected is null in SetStrokeColor(color)");
-            var i = GetIndexOf(Selected);
+            if (Selected != null)
+            {
+                var i = GetIndexOf(Selected);
 
-            (model.Canvas.Children[i] as Path).StrokeThickness = model.Pixel;
-            Svgs[i].SetAttribute("stroke-width", $"{GetSvgStrokeWidthFor(i)}");
+                (model.Canvas.Children[i] as Path).StrokeThickness = model.Pixel;
+                Svgs[i].SetAttribute("stroke-width", $"{GetSvgStrokeWidthFor(i)}");
+            }
         }
 
         private Path selected;
@@ -242,15 +314,48 @@ namespace GUI_BT_SE17.ViewModels
             Svgs[GetIndexOf(path)] = updated;
         }
 
-        public void AddElements (List<Path> paths, List<SvgElement> svgElements)
+        public List<int> AddElements (List<Path> paths, List<SvgElement> svgElements)
         {
             if (paths.Count != svgElements.Count)
                 throw new ArgumentException("DrawingModel: coutn of paths and svgElements differ");
 
+            List<int> indices = new List<int>();
+
             for (var i = 0; i < paths.Count; i++)
             {
                 var j = model.Canvas.Children.Add(paths[i]);
+                indices.Add(j);
                 Svgs.Insert(j, svgElements[i]);
+            }
+            return indices;
+        }
+
+        public void UpdateElements(List<int> indices, List<Path> paths, List<SvgElement> svgElements)
+        {
+            var i = 0;
+            foreach (var index in indices)
+            {
+                (model.Canvas.Children[index] as Path).Data = paths[i].Data;
+                Svgs[index].Path = AquireCopy(svgElements[i++].Path);
+            }
+        }
+
+        public void AddEventsFor (List<int> indices)
+        {
+            foreach (var index in indices)
+            {
+                AddEventsFor(index);
+            }
+        }
+
+        public void RemoveSelectedShape()
+        {
+            if (Selected != null)
+            {
+                var i = SelectedIndex;
+                model.Canvas.Children.RemoveAt(i);
+                Svgs.RemoveAt(i);
+                Selected = null;
             }
         }
 

@@ -8,7 +8,7 @@ namespace GUI_BT_SE17
     internal static class CreateShapeLogic
     {
         private static DrawingModel drawModel = DrawingModel.GetInstance();
-        #region shape functions
+
         public static void StartShape(Point mouseClick, ViewModel model)
         {
             model.MouseClick = mouseClick;
@@ -42,6 +42,6 @@ namespace GUI_BT_SE17
         {
             drawModel.Selected = null;
         }
-        #endregion
+
     }
 }

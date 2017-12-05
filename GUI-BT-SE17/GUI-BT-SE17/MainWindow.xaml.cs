@@ -67,6 +67,11 @@ namespace GUI_BT_SE17
 
             switch (e.Key)
             {
+                case Key.Delete:
+                    {
+                        drawModel.RemoveSelectedShape();
+                        break;
+                    }
                 case Key.P:
                     {
                         viewModel.SelectedMenuItem = Operation.Path;
@@ -74,7 +79,8 @@ namespace GUI_BT_SE17
                     }
                 case Key.Z:
                     {
-                        CreateShapeLogic.EndPath(true);
+                        if (viewModel.SelectedShape != null)
+                            CreateShapeLogic.EndPath(true);
                         break;
                     }
                 case Key.M:

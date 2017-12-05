@@ -15,8 +15,6 @@ namespace GUI_BT_SE17.Enums
         Template,
         Annotation,
         Edit,
-        MirrorVertical,
-        MirrorHorizontal,
         None
     }
 }

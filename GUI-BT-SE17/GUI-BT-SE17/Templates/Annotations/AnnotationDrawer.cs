@@ -44,13 +44,6 @@ namespace GUI_BT_SE17.Shapes
             Updateable = false;
         }
 
-        public void Start(Point mouseClick)
-        {
-            Updateable = true;
-            origin = mouseClick;
-            Svgs = TransformedPathGenerator.TranslateBy(Svgs, origin.X, origin.Y);
-        }
-
         private double CalculateFactor(double baseLenght, double newLength)
         {
             return newLength / baseLenght;
@@ -75,7 +68,14 @@ namespace GUI_BT_SE17.Shapes
             }
 
             return result;
-        } 
+        }
+
+        public void Start(Point mouseClick)
+        {
+            Updateable = true;
+            origin = mouseClick;
+            Svgs = TransformedPathGenerator.TranslateBy(Svgs, origin.X, origin.Y);
+        }
 
         public List<Path> Update(Point mouseClick, out List<SvgElement> svgs)
         {
@@ -89,23 +89,7 @@ namespace GUI_BT_SE17.Shapes
             if (mouseClick.Y < origin.Y)
                 svgs = TransformedPathGenerator.MirrorHorizontalRelative(svgs, origin);
 
-
             return GenerateXAML(svgs);
-        }
-
-        public List<Path> Update(Point mouseClick)
-        {
-            GetAspectRatio(mouseClick, out var xRatio, out var yRatio);
-
-            var newSvg = TransformedPathGenerator.ScaleRelativeBy(Svgs, xRatio, yRatio, origin);
-
-            if (mouseClick.X < origin.X)
-                newSvg = TransformedPathGenerator.MirrorVerticalRelative(newSvg, origin);
-
-            if (mouseClick.Y < origin.Y)
-                newSvg = TransformedPathGenerator.MirrorHorizontalRelative(newSvg, origin);
-
-            return GenerateXAML(newSvg);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BT.ViewModel;
 using GUI_BT_SE17.Enums;
 using GUI_BT_SE17.Shapes;
+using GUI_BT_SE17.Templates.Annotations;
 using GUI_BT_SE17.ViewModels;
 using System.Collections.Generic;
 using System.Windows;
@@ -32,25 +33,24 @@ namespace GUI_BT_SE17
             canvas.MouseLeftButtonDown += MouseLeftButtonDown;
             canvas.MouseMove += MouseMove;
             canvas.MouseLeftButtonUp += MouseLeftButtonUp;
-            canvas.MouseRightButtonUp += MouseRightButtonUp;
+            //canvas.MouseRightButtonUp += MouseRightButtonUp;
 
             return canvas;
         }
 
         #region Canvas Mouse Functions
 
-        private AnnotationDrawer anno;
-        private List<Path> annotatioShapes; 
-
-        private void MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (ViewModel.SelectedShape != null)
-            {
-                CreateShapeLogic.EndPath();
-            }
-        }
+        //private void MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (ViewModel.SelectedShape != null)
+        //    {
+        //        CreateShapeLogic.EndPath();
+        //    }
+        //}
 
         private ShapeMoveCommand moveCommand;
+        private AnnotationHandler annotationHandler;
+
         private void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point position = e.GetPosition(ViewModel.Canvas);
@@ -65,8 +65,8 @@ namespace GUI_BT_SE17
                     }
                 case Operation.Annotation:
                     {
-                        anno = new AnnotationDrawer(ViewModel.SelectedAnnotation);
-                        anno.Start(position);
+                        annotationHandler = new AnnotationHandler(new AnnotationDrawer(ViewModel.SelectedAnnotation));
+                        annotationHandler.Start(position);
                         break;
                     }
                 case Operation.Move:
@@ -100,19 +100,7 @@ namespace GUI_BT_SE17
                         }
                     case Operation.Annotation:
                         {
-                            if (anno != null && anno.Updateable)
-                            {
-                                if (annotatioShapes != null)
-                                {
-                                    foreach (var shape in annotatioShapes)
-                                        ViewModel.Canvas.Children.Remove(shape);
-                                }
-                                annotatioShapes = anno.Update(position);
-                                foreach (var shape in annotatioShapes)
-                                {
-                                    ViewModel.Canvas.Children.Add(shape);
-                                }
-                            }
+                            annotationHandler?.Update(position);
                             break;
                         }
                     case Operation.Move:
@@ -144,25 +132,10 @@ namespace GUI_BT_SE17
             }
             else if (ViewModel.SelectedMenuItem == Operation.Annotation)
             {
-                if (anno != null && anno.Updateable)
-                {
-                    if (annotatioShapes != null)
-                    {
-                        foreach (var shape in annotatioShapes)
-                            ViewModel.Canvas.Children.Remove(shape);
-                    }
-                    annotatioShapes = anno.Update(position, out var svgs);
-                    foreach (var shape in annotatioShapes)
-                    {
-                        ViewModel.Canvas.Children.Add(shape);
-                    }
-
-                    drawModel.AddElements(annotatioShapes, svgs);
-
-                    anno = null;
-                    annotatioShapes = null;
-
-                }
+                annotationHandler.End();
+                annotationHandler = null;
+                ViewModel.SelectedMenuItem = Operation.None;
+                drawModel.Selected = null;
             }
             else if (ViewModel.SelectedMenuItem != Operation.Edit && ViewModel.SelectedMenuItem != Operation.None && ViewModel.SelectedMenuItem != Operation.Path)
             {
