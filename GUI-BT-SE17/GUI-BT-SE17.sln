@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgWrapper", "SvgWrapper\Sv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgPathOperations", "PathOperations\SvgPathOperations.csproj", "{5578F8E2-0CA5-4B59-B0EF-784FB2DEE16D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgInserterTest", "SvgInserterTest\SvgInserterTest.csproj", "{FADC1E2C-FE7B-4B2D-AC64-34ED386922B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestInterception", "TestInterception\TestInterception.csproj", "{98311D75-D4EE-4323-A4C9-D250F3512AC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{5578F8E2-0CA5-4B59-B0EF-784FB2DEE16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5578F8E2-0CA5-4B59-B0EF-784FB2DEE16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5578F8E2-0CA5-4B59-B0EF-784FB2DEE16D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FADC1E2C-FE7B-4B2D-AC64-34ED386922B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADC1E2C-FE7B-4B2D-AC64-34ED386922B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADC1E2C-FE7B-4B2D-AC64-34ED386922B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADC1E2C-FE7B-4B2D-AC64-34ED386922B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98311D75-D4EE-4323-A4C9-D250F3512AC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98311D75-D4EE-4323-A4C9-D250F3512AC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98311D75-D4EE-4323-A4C9-D250F3512AC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98311D75-D4EE-4323-A4C9-D250F3512AC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
