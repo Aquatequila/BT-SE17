@@ -18,40 +18,66 @@ namespace Svg.Path.Operations
             return ToDegrees(Math.Asin(yAbs / hypotenuse));
         }
 
-        private static float CalculateCoordinate(double hypotenuseA, double xOrYvalue, double hypotenuseB)
+        private static PointF GetPoint(PointF reference, int sector, int distance, DeltaUnit unit, bool calculatePointBefore = false)
         {
-            return (float)((xOrYvalue * hypotenuseB) / hypotenuseA);
-        }
+            var deltaX = (float)unit.X * distance;
+            var deltaY = (float)unit.Y * distance;
 
-        public static Tuple<PointF, PointF> PythagoreanTheorem(PointF point1, PointF point2, double deltaDistanceA, double deltaDistanceB, int sector)
-        {
-            if ((sector == 3) || (sector == 4))
+            if (calculatePointBefore)
             {
-                return PythagoreanTheorem(point1, point2, deltaDistanceB, deltaDistanceA);
+                deltaX *= -1;
+                deltaY *= -1;
             }
 
-            return PythagoreanTheorem(point1, point2, deltaDistanceA, deltaDistanceB);
+            var result = new PointF();
+
+            switch (sector)
+            {
+                case 1:
+                    {
+                        result.X = reference.X + deltaX;
+                        result.Y = reference.Y - deltaY;
+                        break;
+                    }
+                case 2:
+                    {
+                        result.X = reference.X - deltaX;
+                        result.Y = reference.Y - deltaY;
+                        break;
+                    }
+                case 3:
+                    {
+                        result.X = reference.X - deltaX;
+                        result.Y = reference.Y + deltaY;
+                        break;
+                    }
+                case 4:
+                    {
+                        result.X = reference.X + deltaX;
+                        result.Y = reference.Y + deltaY;
+                        break;
+                    }
+            }
+            return result;
         }
-
-        private static Tuple<PointF, PointF> PythagoreanTheorem(PointF point1, PointF point2, double deltaDistanceA, double deltaDistanceB)
+        private struct DeltaUnit
         {
-            var before = new PointF(float.NaN, float.NaN);
-            var after = new PointF(float.NaN, float.NaN);
+            public Double X;
+            public Double Y;
+        }
+        private static Double CalculateDistance(PointF start, PointF end)
+        {
+            return Math.Sqrt(Math.Pow(end.X - start.X, 2) + Math.Pow(end.Y - start.Y, 2));
+        }
+        private static DeltaUnit GetDeltaUnit(PointF start, PointF end)
+        {
+            var result = new DeltaUnit();
+            var distance = CalculateDistance(start, end);
 
-            var x0 = Math.Abs(point1.X - point2.X);
-            var y0 = Math.Abs(point1.Y - point2.Y);
-            var v0 = Math.Sqrt(Math.Pow(x0, 2) + Math.Pow(y0, 2));
+            result.X = Math.Abs((end.X - start.X)) / distance;
+            result.Y = Math.Abs((end.Y - start.Y)) / distance;
 
-            var distA = v0 - deltaDistanceA;
-            var distB = v0 + deltaDistanceB;
-
-            before.X = CalculateCoordinate(v0, x0, distA);
-            before.Y = CalculateCoordinate(v0, y0, distA);
-
-            after.X = CalculateCoordinate(v0, x0, distB);
-            after.Y = CalculateCoordinate(v0, y0, distB);
-
-            return new Tuple<PointF, PointF>(before, after);
+            return result;
         }
 
         private static int GetSector(PointF point1, PointF point2)
@@ -73,7 +99,7 @@ namespace Svg.Path.Operations
             }
         }
 
-        public static bool TryGetPointOfIntersection(PointF A, PointF B, PointF C, PointF D, out PointF intersection, out Double angle, out int sector)
+        private static bool TryGetPointOfIntersection(PointF A, PointF B, PointF C, PointF D, out PointF intersection, out Double angle, out int sector)
         {
             intersection = new PointF(float.NaN, float.NaN);
             angle = 0;
@@ -113,11 +139,10 @@ namespace Svg.Path.Operations
         {
             return left > right ? left : right;
         }
-
-        private static bool IsInsideOfBounds(PointF C, PointF D, PointF intersection)
+        private static bool IsInsideOfBounds(PointF C, PointF D, PointF toCheck)
         {
-            var isInsideXBounds = intersection.X >= Min(C.X, D.X) && intersection.X <= Max(C.X, D.X);
-            var isInsideYBounds = intersection.Y >= Min(C.Y, D.Y) && intersection.Y <= Max(C.Y, D.Y);
+            var isInsideXBounds = toCheck.X >= Min(C.X, D.X) && toCheck.X <= Max(C.X, D.X);
+            var isInsideYBounds = toCheck.Y >= Min(C.Y, D.Y) && toCheck.Y <= Max(C.Y, D.Y);
 
             return isInsideXBounds && isInsideYBounds;
         }

@@ -20,39 +20,66 @@ namespace TestInterception
             return ToDegrees (Math.Asin(yAbs / hypotenuse));
         }
 
-        private static float CalculateCoordinate(double hypotenuseA, double xOrYvalue, double hypotenuseB)
+        private PointF GetPoint(PointF reference, int sector, int distance, DeltaUnit unit, bool calculatePointBefore = false)
         {
-            return (float) ((xOrYvalue * hypotenuseB) / hypotenuseA);
-        }
+            var deltaX = (float) unit.X * distance;
+            var deltaY = (float) unit.Y * distance;
 
-        private static Tuple<PointF, PointF> PythagoreanTheorem(PointF point1, PointF point2, double deltaDistanceA, double deltaDistanceB, int sector)
-        {
-            if ((sector == 3) || (sector == 4)) {
-                return PythagoreanTheorem(point1, point2, deltaDistanceB, deltaDistanceA);
+            if (calculatePointBefore)
+            {
+                deltaX *= -1;
+                deltaY *= -1;
             }
 
-            return PythagoreanTheorem(point1, point2, deltaDistanceA, deltaDistanceB);
+            var result = new PointF();
+
+            switch (sector)
+            {
+                case 1:
+                    {
+                        result.X = reference.X + deltaX;
+                        result.Y = reference.Y - deltaY;
+                        break;
+                    }
+                case 2:
+                    {
+                        result.X = reference.X - deltaX;
+                        result.Y = reference.Y - deltaY;
+                        break;
+                    }
+                case 3:
+                    {
+                        result.X = reference.X - deltaX;
+                        result.Y = reference.Y + deltaY;
+                        break;
+                    }
+                case 4:
+                    {
+                        result.X = reference.X + deltaX;
+                        result.Y = reference.Y + deltaY;
+                        break;
+                    }
+            }
+            return result;
         }
-
-        private static Tuple<PointF, PointF> PythagoreanTheorem(PointF point1, PointF point2, double deltaDistanceA, double deltaDistanceB)
+        private struct DeltaUnit
         {
-            var before = new PointF(float.NaN, float.NaN);
-            var after = new PointF(float.NaN, float.NaN);
+            public Double X;
+            public Double Y;
+        }
+        private static Double CalculateDistance(PointF start, PointF end)
+        {
+            return Math.Sqrt(Math.Pow(end.X - start.X, 2) + Math.Pow(end.Y - start.Y,2));
+        }
+        private static DeltaUnit GetDeltaUnit (PointF start, PointF end)
+        {
+            var result = new DeltaUnit();
+            var distance = CalculateDistance(start, end);
 
-            var x0 = Math.Abs(point1.X - point2.X);
-            var y0 = Math.Abs(point1.Y - point2.Y);
-            var v0 = Math.Sqrt(Math.Pow(x0, 2) + Math.Pow(y0, 2));
+            result.X = Math.Abs((end.X - start.X)) / distance;
+            result.Y = Math.Abs((end.Y - start.Y)) / distance;
 
-            var distA = v0 - deltaDistanceA;
-            var distB = v0 + deltaDistanceB;
-
-            before.X = CalculateCoordinate(v0, x0, distA);
-            before.Y = CalculateCoordinate(v0, y0, distA);
-
-            after.X = CalculateCoordinate(v0, x0, distB);
-            after.Y = CalculateCoordinate(v0, y0, distB);
-
-            return new Tuple<PointF, PointF> (before, after);
+            return result;
         }
 
         private static int GetSector (PointF point1, PointF point2)
@@ -136,6 +163,7 @@ namespace TestInterception
             intersection = point;
             return true;
         }
+
         private static bool TryGetPointOfIntersection(PointF A, PointF B, PointF C, PointF D, out PointF intersection)
         {
             intersection = new PointF(float.NaN, float.NaN);
@@ -173,11 +201,10 @@ namespace TestInterception
         {
             return left > right ? left : right;
         }
-
-        private static bool IsInsideOfBounds(PointF C, PointF D, PointF intersection)
+        private static bool IsInsideOfBounds(PointF C, PointF D, PointF toCheck)
         {
-            var isInsideXBounds = intersection.X >= Min(C.X, D.X) && intersection.X <= Max(C.X, D.X);
-            var isInsideYBounds = intersection.Y >= Min(C.Y, D.Y) && intersection.Y <= Max(C.Y, D.Y);
+            var isInsideXBounds = toCheck.X >= Min(C.X, D.X) && toCheck.X <= Max(C.X, D.X);
+            var isInsideYBounds = toCheck.Y >= Min(C.Y, D.Y) && toCheck.Y <= Max(C.Y, D.Y);
 
             return isInsideXBounds && isInsideYBounds;
         }
@@ -390,10 +417,9 @@ namespace TestInterception
             Assert.AreEqual(225, angle, 0.01);
             Assert.AreEqual(3, sector);
 
-            var points = PythagoreanTheorem(p3, result, 5, 10); // before, after
-
-            Assert.AreEqual(6.46, points.Item1.X, 0.1);
-            Assert.AreEqual(6.46, points.Item1.Y, 0.1);
+            //var points = PythagoreanTheorem(p3, result, 5, 10); // before, after
+            //Assert.AreEqual(6.46, points.Item1.X, 0.1);
+            //Assert.AreEqual(6.46, points.Item1.Y, 0.1);
         }
 
         [TestMethod]
@@ -410,10 +436,9 @@ namespace TestInterception
             Assert.AreEqual(135, angle, 0.01);
             Assert.AreEqual(2, sector);
 
-            var points = PythagoreanTheorem(p3, result, 5, 10); // before, after
-
-            Assert.AreEqual(6.46, points.Item1.X, 0.1);
-            Assert.AreEqual(6.46, points.Item1.Y, 0.1);
+            //var points = PythagoreanTheorem(p3, result, 5, 10); // before, after
+            //Assert.AreEqual(6.46, points.Item1.X, 0.1);
+            //Assert.AreEqual(6.46, points.Item1.Y, 0.1);
         }
         [TestMethod]
         public void Test17() // Pythagorean Theorem test
@@ -429,13 +454,13 @@ namespace TestInterception
             Assert.AreEqual(315, angle, 0.01);
             Assert.AreEqual(4, sector);
 
-            var points = PythagoreanTheorem(p3, result, 5, 10); // before, after
+            //var points = PythagoreanTheorem(p3, result, 5, 10); // before, after
 
-            Assert.AreEqual(6.46, points.Item1.X, 0.1);
-            Assert.AreEqual(6.46, points.Item1.Y, 0.1);
+            //Assert.AreEqual(6.46, points.Item1.X, 0.1);
+            //Assert.AreEqual(6.46, points.Item1.Y, 0.1);
 
-            Assert.AreEqual(17.07, points.Item2.X, 0.1);
-            Assert.AreEqual(17.07, points.Item2.Y, 0.1);
+            //Assert.AreEqual(17.07, points.Item2.X, 0.1);
+            //Assert.AreEqual(17.07, points.Item2.Y, 0.1);
         }
         [TestMethod]
         public void Test18() // Pythagorean Theorem test
@@ -451,13 +476,124 @@ namespace TestInterception
             Assert.AreEqual(315, angle, 0.01);
             Assert.AreEqual(4, sector);
 
-            var points = PythagoreanTheorem(p3, result, 5, 10, sector); // before, after
+            //Assert.IsTrue(PythagoreanTheorem(p3, result, 5, 10, sector, out var points)); // before, after
 
-            Assert.AreEqual(2.92, points.Item1.X, 0.1);
-            Assert.AreEqual(2.92, points.Item1.Y, 0.1);
+            //Assert.AreEqual(2.92, points.Item1.X, 0.1);
+            //Assert.AreEqual(2.92, points.Item1.Y, 0.1);
 
-            Assert.AreEqual(13.54, points.Item2.X, 0.1);
-            Assert.AreEqual(13.54, points.Item2.Y, 0.1);
+            //Assert.AreEqual(13.54, points.Item2.X, 0.1);
+            //Assert.AreEqual(13.54, points.Item2.Y, 0.1);
         }
+
+        [TestMethod]
+        public void Test19() // Pythagorean Theorem test
+        {
+            var p1 = new PointF { X = 0, Y = 0 };
+            var p2 = new PointF { X = 100, Y = 100 };
+            var p3 = new PointF { X = 0, Y = 100 };
+            var p4 = new PointF { X = 100, Y = 0 };
+
+            Assert.IsTrue(TryGetPointOfIntersection(p1, p2, p3, p4, out var result, out var angle, out var sector));
+            Assert.AreEqual(50, result.X, 0.1);
+            Assert.AreEqual(50, result.Y, 0.1);
+            Assert.AreEqual(45, angle, 0.01);
+            Assert.AreEqual(1, sector);
+
+
+            var unit = GetDeltaUnit(p3, p4);
+
+            var before = GetPoint(result, sector, 10, unit, calculatePointBefore: true);
+            Assert.AreEqual(42.9, before.X, 0.1);
+            Assert.AreEqual(57, before.Y, 0.1);
+            Assert.IsTrue(IsInsideOfBounds(p3, p4, before));
+
+            var after = GetPoint(result, sector, 10, unit, calculatePointBefore: false);
+            Assert.AreEqual(57, after.X, 0.1);
+            Assert.AreEqual(42.9, after.Y, 0.1);
+            Assert.IsTrue(IsInsideOfBounds(p3, p4, after));
+
+            after = GetPoint(result, sector, 200, unit, calculatePointBefore: false);
+            Assert.IsFalse(IsInsideOfBounds(p3, p4, after));
+
+            before = GetPoint(result, sector, 200, unit, calculatePointBefore: true);
+            Assert.IsFalse(IsInsideOfBounds(p3, p4, before));
+        }
+
+        [TestMethod]
+        public void Test20() // Pythagorean Theorem test
+        {
+            var p1 = new PointF { X = 30, Y = 20 };
+            var p2 = new PointF { X = 60, Y = 40 };
+            var p3 = new PointF { X = 20, Y = 80 };
+            var p4 = new PointF { X = 50, Y = 20 };
+
+            Assert.IsTrue(TryGetPointOfIntersection(p1, p2, p3, p4, out var result, out var angle, out var sector));
+            Assert.AreEqual(45, result.X, 0.1);
+            Assert.AreEqual(30, result.Y, 0.1);
+            Assert.AreEqual(63.43, angle, 0.01);
+            Assert.AreEqual(1, sector);
+            
+            var unitA = GetDeltaUnit(p1, p2);
+            var unitB = GetDeltaUnit(p3, p2);
+
+            var before = GetPoint(result, 4, 10, unitA, calculatePointBefore: true);
+            Assert.IsTrue(IsInsideOfBounds(p1, p2, before));
+
+            var after = GetPoint(result, 4, 10, unitA, calculatePointBefore: false);
+            Assert.IsTrue(IsInsideOfBounds(p1, p2, after));
+        }
+        [TestMethod]
+        public void Test30() // Pythagorean Theorem test
+        {
+            var p1 = new PointF { X = 20, Y = 20 };
+            var p2 = new PointF { X = 120, Y = 20 };
+            var result = new PointF { X = 80, Y = 20 };
+
+            var unitA = GetDeltaUnit(p1, p2);
+
+            var before = GetPoint(result, 1, 10, unitA, calculatePointBefore: true);
+            Assert.IsTrue(IsInsideOfBounds(p1, p2, before));
+
+            var after = GetPoint(result, 1, 10, unitA, calculatePointBefore: false);
+            Assert.IsTrue(IsInsideOfBounds(p1, p2, after));
+        }
+
+        [TestMethod]
+        public void Test31() // Pythagorean Theorem test
+        {
+            var p1 = new PointF { X = 20, Y = 20 };
+            var p2 = new PointF { X = 20, Y = 120 };
+            var result = new PointF { X = 20, Y = 60 };
+
+            var unitA = GetDeltaUnit(p1, p2);
+
+            var before = GetPoint(result, 4, 10, unitA, calculatePointBefore: true);
+            Assert.IsTrue(IsInsideOfBounds(p1, p2, before));
+
+            var after = GetPoint(result, 4, 10, unitA, calculatePointBefore: false);
+            Assert.IsTrue(IsInsideOfBounds(p1, p2, after));
+        }
+
+        [TestMethod]
+        public void Test32() // Pythagorean Theorem test
+        {
+            var p1 = new PointF { X = 20, Y = 120 };
+            var p2 = new PointF { X = 20, Y = 20 };
+            var p3 = new PointF { X = 100, Y = 60 };
+            var p4 = new PointF { X = 0, Y = 60 };
+
+            Assert.IsTrue(TryGetPointOfIntersection(p3, p4, p1, p2, out var result, out var angle, out var sector));
+
+            var unitA = GetDeltaUnit(p1, p2);
+
+            var before = GetPoint(result, 4, 10, unitA, calculatePointBefore: true);
+            Assert.IsTrue(IsInsideOfBounds(p1, p2, before));
+
+            var after = GetPoint(result, 4, 10, unitA, calculatePointBefore: false);
+            Assert.IsTrue(IsInsideOfBounds(p1, p2, after));
+        }
+
+
+
     }
 }
