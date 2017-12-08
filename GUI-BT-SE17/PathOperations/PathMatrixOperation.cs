@@ -1,5 +1,6 @@
 ﻿using Svg.Wrapper;
 using System;
+using System.Collections.Generic;
 
 namespace Svg.Path.Operations
 {
@@ -29,6 +30,30 @@ namespace Svg.Path.Operations
 
     public static class PathMatrixOperation
     {
+
+        public static SvgElement RotateSvg (SvgElement svg, double degrees)
+        {
+            var center = GetCenterPoint(CalculateBoundingRectangle(svg));
+
+            return RotatePathToDegrees(svg, degrees, new SvgCommand { x = center.X, y = center.Y });
+        }
+
+
+
+        private static SvgElement RotatePathToDegrees(SvgElement source, double degrees, SvgCommand center)
+        {
+            var copy = new SvgElement(source);
+            for (var i = 0; i < copy.Path.Count; i++)
+            {
+                copy.Path[i] = NormalizePoint(copy.Path[i], center);
+
+                copy.Path[i] = RotatePointToDegrees(copy.Path[i], degrees, center);
+
+                copy.Path[i] = DenormalizePoint(copy.Path[i], center);
+            }
+            return copy;
+        }
+
         public static void RotatePathToDegrees(ref SvgElement svg, double degrees, SvgCommand center)
         {
             for (var i = 0; i < svg.Path.Count; i++)
@@ -138,17 +163,12 @@ namespace Svg.Path.Operations
             double oldVal;
 
             oldVal = point.x;
-            point.x  = Math.Round(point.x * Math.Cos(degrees), 2)  - Math.Round(point.y * Math.Sin(degrees), 2);
-            point.y  = Math.Round(oldVal * Math.Sin(degrees), 2)  + Math.Round(point.y * Math.Cos(degrees), 2);
-
-            //Console.WriteLine(point);
-
-            point.x1 = point.x1 * Math.Cos(degrees) - point.y1 * Math.Sin(degrees + 180);
-            point.y1 = point.x1 * Math.Sin(degrees) + point.y1 * Math.Cos(degrees + 180);
-            point.rx = point.rx * Math.Cos(degrees) - point.ry * Math.Sin(degrees + 180);
-            point.ry = point.rx * Math.Sin(degrees) + point.ry * Math.Cos(degrees + 180);
-
-            
+            point.x  = Math.Round(point.x * Math.Cos(degrees), 2)  + Math.Round(point.y * Math.Sin(degrees), 2);
+            point.y  = - Math.Round(oldVal * Math.Sin(degrees), 2)  + Math.Round(point.y * Math.Cos(degrees), 2);
+            point.x1 = point.x1 * Math.Cos(degrees) + point.y1 * Math.Sin(degrees + 180);
+            point.y1 = - point.x1 * Math.Sin(degrees) + point.y1 * Math.Cos(degrees + 180);
+            point.rx = point.rx * Math.Cos(degrees) + point.ry * Math.Sin(degrees + 180);
+            point.ry = - point.rx * Math.Sin(degrees) + point.ry * Math.Cos(degrees + 180);
 
             return point;
         }

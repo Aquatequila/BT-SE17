@@ -18,7 +18,7 @@ namespace Svg.Path.Operations
             return ToDegrees(Math.Asin(yAbs / hypotenuse));
         }
 
-        private static PointF GetPoint(PointF reference, int sector, int distance, DeltaUnit unit, bool calculatePointBefore = false)
+        public static PointF GetPoint(PointF reference, int sector, int distance, DeltaUnit unit, bool calculatePointBefore = false)
         {
             var deltaX = (float)unit.X * distance;
             var deltaY = (float)unit.Y * distance;
@@ -60,16 +60,16 @@ namespace Svg.Path.Operations
             }
             return result;
         }
-        private struct DeltaUnit
+        public struct DeltaUnit
         {
             public Double X;
             public Double Y;
         }
-        private static Double CalculateDistance(PointF start, PointF end)
+        public static Double CalculateDistance(PointF start, PointF end)
         {
             return Math.Sqrt(Math.Pow(end.X - start.X, 2) + Math.Pow(end.Y - start.Y, 2));
         }
-        private static DeltaUnit GetDeltaUnit(PointF start, PointF end)
+        public static DeltaUnit GetDeltaUnit(PointF start, PointF end)
         {
             var result = new DeltaUnit();
             var distance = CalculateDistance(start, end);
@@ -99,7 +99,7 @@ namespace Svg.Path.Operations
             }
         }
 
-        private static bool TryGetPointOfIntersection(PointF A, PointF B, PointF C, PointF D, out PointF intersection, out Double angle, out int sector)
+        public static bool TryGetPointOfIntersection(PointF A, PointF B, PointF C, PointF D, out PointF intersection, out Double angle, out int sector)
         {
             intersection = new PointF(float.NaN, float.NaN);
             angle = 0;
@@ -139,7 +139,7 @@ namespace Svg.Path.Operations
         {
             return left > right ? left : right;
         }
-        private static bool IsInsideOfBounds(PointF C, PointF D, PointF toCheck)
+        public static bool IsInsideOfBounds(PointF C, PointF D, PointF toCheck)
         {
             var isInsideXBounds = toCheck.X >= Min(C.X, D.X) && toCheck.X <= Max(C.X, D.X);
             var isInsideYBounds = toCheck.Y >= Min(C.Y, D.Y) && toCheck.Y <= Max(C.Y, D.Y);

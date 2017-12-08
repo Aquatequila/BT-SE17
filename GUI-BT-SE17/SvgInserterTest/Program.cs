@@ -1,40 +1,67 @@
-﻿using Svg.Path.Operations;
+﻿using Svg.IO;
+using Svg.Path.Operations;
 using Svg.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SvgInserterTest
 {
     class Program
     {
-        static PointF FindIntersection(PointF A, PointF B, PointF C, PointF D)
+        private static void GeneratePath (ref List<SvgCommand> path)
         {
-            float a1 = B.Y - A.Y;
-            float b1 = A.X - B.X;
-            float c1 = a1 * A.X + b1 * A.Y;
+            var factory = new SvgCommandFactory();
 
-            float a2 = D.Y - C.Y;
-            float b2 = C.X - D.X;
-            float c2 = a2 * C.X + b2 * C.Y;
+            path.Add(factory.MCmd(60, 60));
+            path.Add(factory.LCmd(0, 0));
+        }
+        private static void InsertTemplateBetween(ref List<SvgCommand> source, int index)
+        {
+            var path = new List<SvgCommand>();
+            var factory = new SvgCommandFactory();
 
-            float det = a1 * b2 - a2 * b1;
-            //If lines are parallel, the result will be (NaN, NaN).
-            return det == 0 ? new PointF(float.NaN, float.NaN)
-                : new PointF((b2 * c1 - b1 * c2) / det, (a1 * c2 - a2 * c1) / det);
+            path.Add(factory.LCmd(40, 40));
+            path.Add(factory.MCmd(30, 30));
+
+            source.InsertRange(index, path);
         }
 
         static void Main(string[] args)
         {
-            var p1 = new PointF { X = 0, Y = 0 };
-            var p2 = new PointF { X = 20, Y = 20 };
-            var p3 = new PointF { X = 0, Y = 20 };
-            var p4 = new PointF { X = 20, Y = 0 };
+            SvgElement elem = new SvgElement();
+            elem.SetAttribute("stroke", "black");
+            elem.SetAttribute("fill", "none");
+            elem.SetAttribute("stroke-width", "2");
+            SvgElement elem2 = new SvgElement();
+            elem2.SetAttribute("stroke", "green");
+            elem2.SetAttribute("fill", "none");
+            elem2.SetAttribute("stroke-width", "2");
 
-            Console.WriteLine(FindIntersection(p1,p2,p3,p4));
+            var template = new List<SvgCommand>();
+            var factory = new SvgCommandFactory();
+
+            template.Add(factory.MCmd(0, 0));
+            template.Add(factory.LCmd(10, -10));
+            template.Add(factory.LCmd(20, 0));
+
+
+            var path = new List<SvgCommand>();
+            GeneratePath(ref path);
+
+            var start = factory.MCmd(30, 0);
+            var end = factory.LCmd(30, 90);
+            elem2.Path = new List<SvgCommand> { start, end };
+            int index = 1;
+            elem.Path = path;
+
+            TemplateInserter.TryApplyTemplate(template, ref elem, ref index, start, end);
+
+            SvgWrapper wrapper = new SvgWrapper();
+            wrapper.SetChild("1", elem);
+            wrapper.SetChild("2", elem2);
+            SvgDocumentWriter writer = new SvgDocumentWriter();
+            writer.WriteToFile("insertTest.svg", wrapper);
         }
     }
 }

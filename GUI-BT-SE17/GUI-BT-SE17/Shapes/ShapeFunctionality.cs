@@ -17,10 +17,12 @@ namespace GUI_BT_SE17.Shapes
         {
             var model = MainWindow.GetViewModel();
 
+            if (model.SelectedMenuItem != Enums.Operation.Move)
+            {
+                model.SelectedMenuItem = Enums.Operation.Edit;
+                args.Handled = true;
+            }
             drawingModel.Selected = (Path)sender;
-            model.SelectedMenuItem = Enums.Operation.Edit;
-
-            args.Handled = true;
         }
 
         private static bool hovered = false;

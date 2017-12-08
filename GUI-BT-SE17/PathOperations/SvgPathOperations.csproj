@@ -45,6 +45,7 @@
     <Compile Include="LineInterception.cs" />
     <Compile Include="PathMatrixOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateInserter.cs" />
     <Compile Include="TransformedPathGenerator.cs" />
   </ItemGroup>
   <ItemGroup>

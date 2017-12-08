@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interceptor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -51,6 +50,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PathOperations\SvgPathOperations.csproj">
+      <Project>{5578f8e2-0ca5-4b59-b0ef-784fb2dee16d}</Project>
+      <Name>SvgPathOperations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SvgIO\SvgIO.csproj">
+      <Project>{3D227B11-BF6F-4F7A-A362-DE2FD85AC770}</Project>
+      <Name>SvgIO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SvgWrapper\SvgWrapper.csproj">
       <Project>{a4d5bf52-fd73-41d8-9653-b017f9ff4efd}</Project>
       <Name>SvgWrapper</Name>

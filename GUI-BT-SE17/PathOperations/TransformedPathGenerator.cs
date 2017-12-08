@@ -14,9 +14,23 @@ namespace Svg.Path.Operations
             {
                 returnValue.Path[i] = NormalizePoint(returnValue.Path[i], center);
 
-                returnValue.Path[i] = RotatePointToDegrees(returnValue.Path[i], degrees, center);
+                returnValue.Path[i] = RotatePointToDegrees(returnValue.Path[i], degrees);
 
                 returnValue.Path[i] = DenormalizePoint(returnValue.Path[i], center);
+            }
+            return returnValue;
+        }
+
+        public static List<SvgCommand> RotatePathByDegrees(List<SvgCommand> path, double degrees, SvgCommand center)
+        {
+            var returnValue = path;
+            for (var i = 0; i < returnValue.Count; i++)
+            {
+                returnValue[i] = NormalizePoint(returnValue[i], center);
+
+                returnValue[i] = RotatePointToDegrees(returnValue[i], degrees);
+
+                returnValue[i] = DenormalizePoint(returnValue[i], center);
             }
             return returnValue;
         }
@@ -116,7 +130,7 @@ namespace Svg.Path.Operations
             return boundingRectangle;
         }
 
-        private static SvgCommand NormalizePoint(SvgCommand point, SvgCommand center)
+        public static SvgCommand NormalizePoint(SvgCommand point, SvgCommand center)
         {
             point.x = point.x - center.x;
             point.y = point.y - center.y;
@@ -128,7 +142,7 @@ namespace Svg.Path.Operations
             return point;
         }
 
-        private static SvgCommand DenormalizePoint(SvgCommand point, SvgCommand center)
+        public static SvgCommand DenormalizePoint(SvgCommand point, SvgCommand center)
         {
             point.x = point.x + center.x;
             point.y = point.y + center.y;
@@ -140,7 +154,7 @@ namespace Svg.Path.Operations
             return point;
         }
 
-        private static SvgCommand DenormalizePoint(SvgCommand point, Point position)
+        public static SvgCommand DenormalizePoint(SvgCommand point, Point position)
         {
             point.x = point.x + position.X;
             point.y = point.y + position.Y;
@@ -152,7 +166,7 @@ namespace Svg.Path.Operations
             return point;
         }
 
-        private static SvgCommand NormalizePoint(SvgCommand point, Point position)
+        public static SvgCommand NormalizePoint(SvgCommand point, Point position)
         {
             point.x = point.x - position.X;
             point.y = point.y - position.Y;
@@ -164,7 +178,7 @@ namespace Svg.Path.Operations
             return point;
         }
 
-        private static SvgCommand RotatePointToDegrees(SvgCommand point, double degrees, SvgCommand center)
+        public static SvgCommand RotatePointToDegrees(SvgCommand point, double degrees)
         {
             degrees = degrees * Math.PI / 180;
             double oldVal;
@@ -179,8 +193,6 @@ namespace Svg.Path.Operations
             point.y1 = point.x1 * Math.Sin(degrees) + point.y1 * Math.Cos(degrees + 180);
             point.rx = point.rx * Math.Cos(degrees) - point.ry * Math.Sin(degrees + 180);
             point.ry = point.rx * Math.Sin(degrees) + point.ry * Math.Cos(degrees + 180);
-
-
 
             return point;
         }

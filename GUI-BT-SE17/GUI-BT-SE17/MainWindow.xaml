@@ -71,7 +71,7 @@
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
-        <ListView SelectedIndex="{Binding Path=AnnotationIndex}" Width="185" Background="Black"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemsSource="{Binding Path=Annotations, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+        <ListView SelectedIndex="{Binding Path=AnnotationIndex}" Width="95" Background="Black"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemsSource="{Binding Path=Annotations, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
