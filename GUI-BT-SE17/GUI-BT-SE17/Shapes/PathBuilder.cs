@@ -1,4 +1,5 @@
 ﻿using GUI_BT_SE17.ViewModels;
+using Svg.Path.Operations;
 using Svg.Wrapper;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,74 @@ namespace GUI_BT_SE17
 
         public static void SetPathPoint (Point mouseclick)
         {
+            // start insert
+            if (stage > 0)
+            {
+                if (path.Last().type != PointType.M)
+                {
+                    path.RemoveLast();
+                }
+                var previous = path.Last();
+                var current = factory.LCmd(mouseclick.X, mouseclick.Y);
+                var template = new List<SvgCommand>
+                {
+                    factory.MCmd(0, 0),
+                    factory.LCmd(30, -30),
+                    factory.LCmd(60, 0),
+                    factory.LCmd(30, 30),
+                    factory.LCmd(0, 0),
+                    factory.MCmd(15, -15),
+                    factory.LCmd(45, 15),
+                    factory.MCmd(15, 15),
+                    factory.LCmd(45, -15),
+                    factory.MCmd(60, 0),
+
+                };
+                //var template = new List<SvgCommand>
+                //{
+                //    factory.MCmd(0, 0),
+                //    factory.LCmd(10, -10),
+                //    factory.LCmd(0, -30),
+                //    factory.LCmd(-10, -10),
+                //    factory.LCmd(10, 10),
+                //    factory.LCmd(0, 30),
+                //    factory.LCmd(-10, 10),
+                //    factory.LCmd(0, 0),
+                //    factory.MCmd(10, -10),
+                //    factory.LCmd(30, 0),
+                //    factory.LCmd(10, 10),
+                //    factory.MCmd(-10, 10),
+                //    factory.LCmd(-30, 0),
+                //    factory.LCmd(-10, -10),
+                //    factory.MCmd(0, 0),
+                //};
+                //var template = new List<SvgCommand>
+                //{
+                //    factory.MCmd(0, 0),
+                //    factory.LCmd(20, -20),
+                //    factory.LCmd(-20, -20),
+                //    factory.LCmd(20, 20),
+                //    factory.LCmd(-20, 20),
+                //    factory.LCmd(0, 0),
+                //};
+                //var template = new List<SvgCommand> { factory.MCmd(0, 0), factory.LCmd(10, 10), factory.LCmd(20,0) };
+                //var template = new List<SvgCommand> { factory.MCmd(0, 0), factory.QCmd(100,0,50, -200) };
+                var svgs = drawModel.Svgs;
+                var selfIndex = drawModel.SelectedIndex;
+
+                bool inserted = TemplateInserter.TryApplyTemplate(previous, current, selfIndex, template, svgs, out List<SvgCommand> result);
+
+                if (inserted)
+                {
+                    path.InsertRange(path.Count, result);
+                }
+                else
+                {
+                    path.AddLineCommand(mouseclick);
+                }
+                drawModel.AddLineToPath(path.XamlPath());
+            }
+            // end insert
             path.UpdatePath(mouseclick);
         }
 
@@ -96,7 +165,9 @@ namespace GUI_BT_SE17
         }
         private static void Close(this List<SvgCommand> self)
         {
-            self.Add(factory.ZCmd());
+            self.Add(factory.LCmd(self[0].x, self[0].y)); 
+
+            //self.Add(factory.ZCmd());
         }
 
         public static void EndPath (bool close)

@@ -100,8 +100,10 @@ namespace BT.ViewModel
             templateLoader = new TemplateLoader(templatePath);
             patterns = new TemplateLoader(patternPath);
 
-            Annotations = templateLoader.GetItems();
-            Annotations[0].PngPath = @"/../../Pictures/test.png";
+            var items = templateLoader.GetItems();
+            items[0].PngPath = @"/../../Pictures/test.png";
+            //items[1].PngPath = @"/../../Pictures/test.png";
+            Annotations = items;
         }
 
 

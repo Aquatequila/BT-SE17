@@ -38,8 +38,6 @@ namespace Svg.Path.Operations
             return RotatePathToDegrees(svg, degrees, new SvgCommand { x = center.X, y = center.Y });
         }
 
-
-
         private static SvgElement RotatePathToDegrees(SvgElement source, double degrees, SvgCommand center)
         {
             var copy = new SvgElement(source);
@@ -126,7 +124,8 @@ namespace Svg.Path.Operations
                 }
                 else
                 {
-                    boundingRectangle.Set(Point.x, Point.y);
+                    foreach (var point in Point.GetRelevantPoints())
+                        boundingRectangle.Set(point.X, point.Y);
                 }
             }
 
@@ -163,12 +162,16 @@ namespace Svg.Path.Operations
             double oldVal;
 
             oldVal = point.x;
-            point.x  = Math.Round(point.x * Math.Cos(degrees), 2)  + Math.Round(point.y * Math.Sin(degrees), 2);
-            point.y  = - Math.Round(oldVal * Math.Sin(degrees), 2)  + Math.Round(point.y * Math.Cos(degrees), 2);
+            point.x  = point.x * Math.Cos(degrees) + point.y * Math.Sin(degrees);
+            point.y  = - oldVal * Math.Sin(degrees)  + point.y * Math.Cos(degrees);
+
+            oldVal = point.x1;
             point.x1 = point.x1 * Math.Cos(degrees) + point.y1 * Math.Sin(degrees + 180);
-            point.y1 = - point.x1 * Math.Sin(degrees) + point.y1 * Math.Cos(degrees + 180);
+            point.y1 = - oldVal * Math.Sin(degrees) + point.y1 * Math.Cos(degrees + 180);
+
+            oldVal = point.rx;
             point.rx = point.rx * Math.Cos(degrees) + point.ry * Math.Sin(degrees + 180);
-            point.ry = - point.rx * Math.Sin(degrees) + point.ry * Math.Cos(degrees + 180);
+            point.ry = - oldVal * Math.Sin(degrees) + point.ry * Math.Cos(degrees + 180);
 
             return point;
         }

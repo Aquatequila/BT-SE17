@@ -80,10 +80,10 @@ namespace Svg.IO
         private int ParseQCommand(int startIndex, List<string> splited, List<SvgCommand> result, bool isAbsolut = true)
         {
             //double x, double y, double x1, double y1
-            double x  = Double.Parse(splited[++startIndex]);
-            double y  = Double.Parse(splited[++startIndex]);
-            double x1 = Double.Parse(splited[++startIndex]);
-            double y1 = Double.Parse(splited[++startIndex]);
+            double x1   = Double.Parse(splited[++startIndex]);
+            double y1   = Double.Parse(splited[++startIndex]);
+            double x    = Double.Parse(splited[++startIndex]);
+            double y   = Double.Parse(splited[++startIndex]);
 
             if (isAbsolut)
                 result.Add(factory.QCmd(x, y, x1, y1));
@@ -118,7 +118,6 @@ namespace Svg.IO
                     }
                 }
             }
-            // show error in GUI window
             catch (ArgumentNullException)
             {
                 Console.WriteLine("argument not found");
@@ -172,8 +171,6 @@ namespace Svg.IO
                 var doc = new XmlDocument();
                 doc.Load(Path);
 
-                //Console.WriteLine(doc.DocumentElement.Name);
-
                 foreach (XmlAttribute attribute in doc.DocumentElement.Attributes) // root node
                 {
                     if (attribute.Name == "viewbox")
@@ -186,19 +183,14 @@ namespace Svg.IO
                 foreach (XmlNode elem in doc.DocumentElement)
                 {
                     SvgElement svg = new SvgElement();
-                    //Console.WriteLine(elem.Name + " : ");
 
                     foreach (XmlAttribute attribute in elem.Attributes)
                     {
                         svg.SetAttribute(attribute.Name, attribute.Value);
-                        //Console.WriteLine(attribute.Name + "=" + attribute.Value + ", ");
                     }
                     svg.Path = ParseParth(svg.Attributes["d"]);
-                    //svg.WriteToConsole();
                     svgWrapper.SetChild($"{i++}", svg);
                 }
-                //SVGDocumentWriter writer = new SVGDocumentWriter();
-                //writer.WriteToFile("otherSvg.svg", svgWrapper);
                 Console.WriteLine("finished parsing document...");
                 return svgWrapper;
             }

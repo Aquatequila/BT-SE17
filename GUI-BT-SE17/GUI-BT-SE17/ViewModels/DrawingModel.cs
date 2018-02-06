@@ -18,7 +18,7 @@ namespace GUI_BT_SE17.ViewModels
     internal class DrawingModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private static ViewModel model;
+        
 
         private DrawingModel() { }
 
@@ -32,6 +32,8 @@ namespace GUI_BT_SE17.ViewModels
             return self;
         }
 
+
+        private static ViewModel model;
         public void SetViewModel()
         {
             model = ViewModel.GetViewModel();
@@ -145,7 +147,7 @@ namespace GUI_BT_SE17.ViewModels
 
             for (var i = 0; i < Svgs.Count; i++)
             {
-                wrapper.SetChild($"element {i}", Svgs[i++]);
+                wrapper.SetChild($"element {i}", Svgs[i]);
             }
             writer.WriteToFile(path, wrapper);
         }
@@ -317,7 +319,7 @@ namespace GUI_BT_SE17.ViewModels
         public List<int> AddElements (List<Path> paths, List<SvgElement> svgElements)
         {
             if (paths.Count != svgElements.Count)
-                throw new ArgumentException("DrawingModel: coutn of paths and svgElements differ");
+                throw new ArgumentException("DrawingModel: count of paths and svgElements differ");
 
             List<int> indices = new List<int>();
 
@@ -369,5 +371,6 @@ namespace GUI_BT_SE17.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Svgs)));
             }
         }
+
     }
 }

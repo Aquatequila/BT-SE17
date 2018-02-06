@@ -4,6 +4,29 @@
     {
         public SvgCommandFactory() {}
 
+        public SvgCommand MCmd(double x, double y)
+        {
+            SvgCommand returnValue = new SvgCommand();
+            InitPoint(returnValue);
+
+            returnValue.type = PointType.M;
+            returnValue.x = x;
+            returnValue.y = y;
+
+            return returnValue;
+        }
+        public SvgCommand LCmd(double x, double y)
+        {
+            SvgCommand returnValue = new SvgCommand();
+            InitPoint(returnValue);
+
+            returnValue.type = PointType.L;
+            returnValue.x = x;
+            returnValue.y = y;
+
+            return returnValue;
+        }
+
         private void InitPoint(SvgCommand point)
         {
             point.x = 0;
@@ -30,17 +53,7 @@
             returnValue.type = PointType.z;
             return returnValue;
         }
-        public SvgCommand MCmd(double x, double y)
-        {
-            SvgCommand returnValue   = new SvgCommand();
-            InitPoint(returnValue);
-
-            returnValue.type        = PointType.M;
-            returnValue.x           = x;
-            returnValue.y           = y;
-
-            return returnValue;
-        }
+       
         public SvgCommand mCmd(double x, double y)
         {
             SvgCommand returnValue   = new SvgCommand();
@@ -52,17 +65,7 @@
 
             return returnValue;
         }
-        public SvgCommand LCmd(double x, double y)
-        {
-            SvgCommand returnValue   = new SvgCommand();
-            InitPoint(returnValue);
-
-            returnValue.type        = PointType.L;
-            returnValue.x           = x;
-            returnValue.y           = y;
-
-            return returnValue;
-        }
+        
         public SvgCommand lCmd(double x, double y)
         {
             SvgCommand returnValue   = new SvgCommand();

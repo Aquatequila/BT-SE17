@@ -113,6 +113,16 @@ namespace GUI_BT_SE17
                         viewModel.SelectedMenuItem = Operation.Annotation;
                         break;
                     }
+                case Key.T:
+                    {
+                        viewModel.SelectedMenuItem = Operation.Template;
+                        break;
+                    }
+                case Key.Escape:
+                    {
+                        viewModel.SelectedMenuItem = Operation.None;
+                        break;
+                    }
                 default:
                     Console.WriteLine("no valid key pressed");
                     break;
@@ -123,10 +133,14 @@ namespace GUI_BT_SE17
         private void SaveFileButton_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "svg files (*.svg)|*.svg";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+
             saveFileDialog.InitialDirectory = @"C:\Users\ntecm\desktop\temp";
             if (saveFileDialog.ShowDialog() == true)
             {
-                drawModel.WriteToFile(saveFileDialog.FileName + ".svg");
+                drawModel.WriteToFile(saveFileDialog.FileName);
             }
         }
 

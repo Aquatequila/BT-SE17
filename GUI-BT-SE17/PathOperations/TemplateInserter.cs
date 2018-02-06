@@ -23,6 +23,43 @@ namespace Svg.Path.Operations
             return point;
         }
 
+        public static bool TryApplyTemplate(SvgCommand previous, SvgCommand current, int selfIndex, List<SvgCommand> template, List<SvgElement> svgs, out List<SvgCommand> result)
+        {
+            var elem = new SvgElement();
+            elem.Path = new List<SvgCommand> { previous, current };
+            int index = 1;
+            //bool success = false;
+
+            for (int i = 0; i < svgs.Count; i++) // for each svg
+            {
+                if (i != selfIndex) // not own lines
+                {
+                    SvgCommand start = new SvgCommand();
+                    SvgCommand end = new SvgCommand();
+
+                    for (int j = 0; j < svgs[i].Path.Count; j++)
+                    {
+                        if (j == 0)
+                        {
+                            end = svgs[i].Path[j];
+                        }
+                        else
+                        {
+                            start = end;
+                            end = svgs[i].Path[j];
+                            if (TryApplyTemplate(template, ref elem, ref index, start, end))
+                            {
+                                result = elem.Path;
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            result =  elem.Path;
+            return false;
+        }
+
         public static bool TryApplyTemplate(List<SvgCommand> template, ref SvgElement source, ref int index, SvgCommand start, SvgCommand end)
         {
             var first = new PointF().Init(template.First());
@@ -52,20 +89,21 @@ namespace Svg.Path.Operations
                     // rotate
                     var tempSvg = new SvgElement { Path = template };
                     var rotated = PathMatrixOperation.RotateSvg(tempSvg, angle);
-                    // move to
-                    var deltaX = before.X - rotated.Path[0].x;
-                    var deltaY = before.Y - rotated.Path[0].y;
+                    var i = 0;
+                    // translate
+                    var deltaX = before.X - rotated.Path[i].x;
+                    var deltaY = before.Y - rotated.Path[i].y;
                     PathMatrixOperation.TranslatePath(ref rotated, deltaX, deltaY);
-                    // insert command for smooth transition to point before
+                    // replace
                     var factory = new SvgCommandFactory();
                     var cmd = factory.LCmd(before.X, before.Y);
-                    rotated.Path[0] = cmd;
+                    rotated.Path[i] = cmd;
                     // insert
                     InsertTemplate(rotated.Path, ref source, ref index);
                     return true;
                 }
             }
-            else // there is no intersection
+            else // no intersection
             {
                 return false;
             }

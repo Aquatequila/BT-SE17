@@ -22,23 +22,32 @@ namespace GUI_BT_SE17.Shapes
                 model.SelectedMenuItem = Enums.Operation.Edit;
                 args.Handled = true;
             }
-            drawingModel.Selected = (Path)sender;
+            if (model.SelectedMenuItem != Enums.Operation.Path)
+                drawingModel.Selected = (Path)sender;
         }
 
         private static bool hovered = false;
 
         public static void Hover(object sender, MouseEventArgs args)
         {
-            if (!hovered)
-                (sender as Shape).StrokeThickness += 3;
-            hovered = true;
+            var model = MainWindow.GetViewModel();
+            if (model.SelectedMenuItem != Enums.Operation.Path)
+            {
+                if (!hovered)
+                    (sender as Shape).StrokeThickness += 3;
+                hovered = true;
+            }
         }
 
         public static void EndHover(object sender, MouseEventArgs args)
         {
-            if (hovered)
-                (sender as Shape).StrokeThickness -= 3;
-            hovered = false;
+            var model = MainWindow.GetViewModel();
+            if (model.SelectedMenuItem != Enums.Operation.Path)
+            {
+                if (hovered)
+                    (sender as Shape).StrokeThickness -= 3;
+                hovered = false;
+            }
         }
     }
 }

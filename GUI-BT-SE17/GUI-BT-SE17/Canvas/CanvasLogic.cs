@@ -1,5 +1,6 @@
 ﻿using BT.ViewModel;
 using GUI_BT_SE17.Enums;
+using GUI_BT_SE17.Functionality;
 using GUI_BT_SE17.Shapes;
 using GUI_BT_SE17.Templates.Annotations;
 using GUI_BT_SE17.ViewModels;
@@ -40,14 +41,6 @@ namespace GUI_BT_SE17
 
         #region Canvas Mouse Functions
 
-        //private void MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    if (ViewModel.SelectedShape != null)
-        //    {
-        //        CreateShapeLogic.EndPath();
-        //    }
-        //}
-
         private ShapeMoveCommand moveCommand;
         private AnnotationHandler annotationHandler;
 
@@ -61,6 +54,12 @@ namespace GUI_BT_SE17
                     {
                         if (ViewModel.SelectedShape == null) CreateShapeLogic.StartShape(position, ViewModel);
                         else CreateShapeLogic.SetPathPoint(position);
+                        break;
+                    }
+                case Operation.Template:
+                    {
+                        if (ViewModel.SelectedShape == null) CreateTemplateLogic.StartShape(position, ViewModel);
+                        else CreateTemplateLogic.SetPathPoint(position);
                         break;
                     }
                 case Operation.Annotation:
@@ -92,6 +91,11 @@ namespace GUI_BT_SE17
                     case Operation.Path:
                         {
                             CreateShapeLogic.UpdatePath(position);
+                            break;
+                        }
+                    case Operation.Template:
+                        {
+                            CreateTemplateLogic.UpdatePath(position);
                             break;
                         }
                     case Operation.None:

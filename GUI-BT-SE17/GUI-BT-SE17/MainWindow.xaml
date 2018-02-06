@@ -84,13 +84,28 @@
                     <Image Width="80" Source="{Binding Path=PngPath}"></Image>
                 </DataTemplate>
             </ListView.ItemTemplate>
+        </ListView>
+        <ListView SelectedIndex="{Binding Path=klj}" Width="95" Background="Black"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                  ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                  ItemsSource="{Binding Path=sdalfkja, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Width="185" Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Image Width="80" Source="{Binding Path=PngPath}"></Image>
+                </DataTemplate>
+            </ListView.ItemTemplate>
 
             <!--<ListViewItem Width="90">
                 <Image Source="C:\Users\ntecm\Documents\SEM5\BachelorGit\GUI-BT-SE17\GUI-BT-SE17\Pictures\PNG.png"  Width="80"/>
             </ListViewItem>-->
-            
-        </ListView>
 
+        </ListView>
         <ContentPresenter Content="{Binding Path=Canvas}" Focusable="true"></ContentPresenter>
     </DockPanel>
 

@@ -9,12 +9,16 @@ namespace Svg.Path.Operations
         {
             return radianValue * 180 / Math.PI;
         }
-        private static double GetAngle(PointF p1, PointF p2)
+        private static double GetAngle(PointF p1, PointF p2, int sector)
         {
             float xAbs = Max(p1.X, p2.X) - Min(p1.X, p2.X);
             float yAbs = Max(p1.Y, p2.Y) - Min(p1.Y, p2.Y);
             float hypotenuse = (float)Math.Sqrt(Math.Pow(xAbs, 2) + Math.Pow(yAbs, 2));
 
+            if (sector == 2 || sector == 4)
+            {
+                return 90 - ToDegrees(Math.Asin(yAbs / hypotenuse));
+            }
             return ToDegrees(Math.Asin(yAbs / hypotenuse));
         }
 
@@ -99,7 +103,8 @@ namespace Svg.Path.Operations
             }
         }
 
-        public static bool TryGetPointOfIntersection(PointF A, PointF B, PointF C, PointF D, out PointF intersection, out Double angle, out int sector)
+        public static bool TryGetPointOfIntersection(PointF A, PointF B, PointF C, PointF D, 
+                                out PointF intersection, out Double angle, out int sector)
         {
             intersection = new PointF(float.NaN, float.NaN);
             angle = 0;
@@ -123,10 +128,10 @@ namespace Svg.Path.Operations
 
             PointF point = new PointF { X = x, Y = y };
 
-            if (!IsInsideOfBounds(C, D, point))
+            if (!IsInsideOfBounds(C, D, point) || !IsInsideOfBounds(A,B,point))
                 return false;
 
-            angle = GetAngle(C, D) + (sector - 1) * 90;
+            angle = GetAngle(C, D, sector) + (sector - 1) * 90;
             intersection = point;
             return true;
         }

@@ -34,6 +34,25 @@ namespace Svg.Path.Operations
             }
             return returnValue;
         }
+        public static SvgCommand RotatePointToDegrees(SvgCommand point, double degrees)
+        {
+            degrees = degrees * Math.PI / 180;
+            double oldVal;
+
+            oldVal = point.x;
+            point.x = point.x * Math.Cos(degrees) - point.y * Math.Sin(degrees);
+            point.y = oldVal * Math.Sin(degrees) + point.y * Math.Cos(degrees);
+
+            oldVal = point.x1;
+            point.x1 = point.x1 * Math.Cos(degrees) - point.y1 * Math.Sin(degrees + 180);
+            point.y1 = oldVal * Math.Sin(degrees) + point.y1 * Math.Cos(degrees + 180);
+
+            oldVal = point.x;
+            point.rx = point.rx * Math.Cos(degrees) - point.ry * Math.Sin(degrees + 180);
+            point.ry = oldVal * Math.Sin(degrees) + point.ry * Math.Cos(degrees + 180);
+
+            return point;
+        }
 
         private static System.Windows.Point GetCenterPoint(BoundingRectangle box)
         {
@@ -99,8 +118,8 @@ namespace Svg.Path.Operations
                         }
                         else
                         {
-                            boundingRectangle.Set(Point.x, Point.y);
-
+                            foreach (var point in Point.GetRelevantPoints())
+                                boundingRectangle.Set(point.X, point.Y);
                         }
                     }
                 }
@@ -178,25 +197,6 @@ namespace Svg.Path.Operations
             return point;
         }
 
-        public static SvgCommand RotatePointToDegrees(SvgCommand point, double degrees)
-        {
-            degrees = degrees * Math.PI / 180;
-            double oldVal;
-
-            oldVal = point.x;
-            point.x = Math.Round(point.x * Math.Cos(degrees), 2) - Math.Round(point.y * Math.Sin(degrees), 2);
-            point.y = Math.Round(oldVal * Math.Sin(degrees), 2) + Math.Round(point.y * Math.Cos(degrees), 2);
-
-            //Console.WriteLine(point);
-
-            point.x1 = point.x1 * Math.Cos(degrees) - point.y1 * Math.Sin(degrees + 180);
-            point.y1 = point.x1 * Math.Sin(degrees) + point.y1 * Math.Cos(degrees + 180);
-            point.rx = point.rx * Math.Cos(degrees) - point.ry * Math.Sin(degrees + 180);
-            point.ry = point.rx * Math.Sin(degrees) + point.ry * Math.Cos(degrees + 180);
-
-            return point;
-        }
-
         private static SvgCommand ScalePoint(SvgCommand point, double amount)
         {
             point.x *= amount;
@@ -223,7 +223,7 @@ namespace Svg.Path.Operations
 
         private static SvgCommand InvertXSign(SvgCommand point)
         {
-            point.x = - point.x;
+            point.x = -point.x;
             point.rx = -point.rx;
             point.x1 = -point.x1;
 
